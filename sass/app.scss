@@ -1,0 +1,106 @@
+@mixin fontsz($fsize, $fcolor) {
+    color: $fcolor;
+    font-size: $fsize;
+}
+
+@mixin divcenter($flexdir: column) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $flexdir;
+}
+
+@mixin boxwithborder($bgcolor: var(--quotegray), $borderline: 1px, $bgbordercolor: var(--bgbottomblack), $color: var(--txwhite)){
+    background-color: $bgcolor;
+    border: $borderline solid $bgbordercolor;
+    color: $color;
+}
+
+@mixin bgblacktxwhite($borderline: 1px) {
+    background-color: var(--quotegray);
+    border: $borderline solid var(--bgbottomblack);
+    color: var(--txwhite)
+}
+
+@mixin maintextarea($height) {
+    @include bgblacktxwhite(2px);
+    width: 49vw;
+    height: $height;
+    resize: none;
+}
+
+@mixin onecharbutton() {
+    border-radius: 15px;
+    padding: 5px;
+    width: 35px;
+    height: 35px;
+}
+
+@mixin margintb($top: auto, $bottom: auto) {
+    margin-top: $top;
+    margin-bottom: $bottom;
+}
+
+@mixin marginlr($left: auto, $right: auto) {
+    margin-left: $left;
+    margin-right: $right;
+}
+
+@mixin borderleft($border, $padding: 15px, $margin: 0) {
+    border-left: $border;
+    padding-left: $padding;
+    margin-left: $margin;
+}
+
+@mixin bolditalic() {
+    font-weight: $value;
+    font-style: italic;
+}
+
+@mixin gridcont($gap: 0) {
+    display: grid;
+    gap: $gap ;
+}
+
+@mixin griditem($rowstart, $rowend, $colstart, $colend) {
+    grid-row-start: $rowstart;
+    grid-row-end: $rowend;
+    grid-column-start: $colstart;
+    grid-column-end: $colend;
+}
+
+@mixin griditemcenter() {
+    justify-self: center;
+    align-self: center;
+}
+
+:root {
+    --txwhite: #e7e7e7;
+    --txgray: #7c7c7c;
+    --bgbottomblack: #0f0f15;
+    --bgupperblack: #151515;
+    --input-bg: #000;
+    --input-border: #595959;
+    --quotegray: #1e1e1e;
+    --borderblue: #3a67ac;
+    --title-blue: #6a81ff;
+    --link-blue: #9eadff;
+    --cyan: #00ffe7;
+
+    --contentlinespacing: 1.5rem;
+    --contentmarginright: 26px;
+
+    --default-mobile: 1.3rem 0;
+    --outerwidth: 1000px;
+    --bar-width: 300px;
+    --post-width: 900px;
+    --upperpadding: 0px 20px 20px 20px;
+    --outer-left-margin: 8%; 
+    --mainmargin: 20px var(--outer-left-margin) 20px var(--outer-left-margin);
+    // --sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    // --calibri: calibri, Arial, Tahoma;
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+    font-family: var(--font-sans);
+}

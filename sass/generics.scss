@@ -1,0 +1,63 @@
+@use 'app.scss';
+
+body {
+    @include app.fontsz(1rem, var(--txwhite));
+    // background-image: linear-gradient(to bottom, black 1%, #00041c 75%);
+    background-color: #0f0f0f;
+    background-attachment: fixed;
+    color: var(--txwhite);
+    width: 99%;
+    // overflow-x: hidden;
+
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+            color: var(--link-blue)
+    }
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0px;
+}
+
+h2 {
+    text-transform: uppercase;
+    font-weight: 610;
+}
+
+nav ul {
+    @include app.divcenter(unset);
+    list-style-type: none;
+    margin: 0 6rem 0 6rem;
+    padding: 0;
+    overflow: hidden;
+    min-width: 420px;
+
+    li {
+        float: left;
+
+        a {
+            display: block;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+
+            &:hover {
+                background-color: #252550;
+                color: inherit;
+            }
+        }
+    }
+}
+
+footer {
+    @include app.divcenter(column);
+    margin-top: 5rem;
+}

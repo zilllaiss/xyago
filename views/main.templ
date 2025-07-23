@@ -1,0 +1,24 @@
+package views 
+
+templ Single(title string) {
+	@Base(title) {
+		@Nav()
+		<div class="header-container">
+			<h2>{ title }</h2>
+		</div>
+		{ children... }
+	}
+}
+
+templ SingleNoH2(title string) {
+	@Base(title) {
+		@Nav()
+		{ children... }
+	}
+}
+
+templ Error(err error) {
+	@Base("An error happened!") {
+		<p>{ err.Error() }</p>
+	}
+}

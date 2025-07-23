@@ -1,0 +1,29 @@
+package views 
+
+import (
+	"time"
+	"fmt"
+)
+
+templ Base(title string) {
+	{{ year := time.Now().Year() }}
+	{ children... }
+	<footer>
+		© { year } Zill_Laiss.
+	</footer>
+}
+
+templ Nav() {
+	<nav>
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/blog/1">Blog</a></li>
+			<li><a href="/tags/">Tags</a></li>
+			<li><a href="/about">About</a></li>
+		</ul>
+	</nav>
+}
+
+func surl(format string, a... any) templ.SafeURL { 
+    return templ.SafeURL(fmt.Sprintf(format, a...))
+}

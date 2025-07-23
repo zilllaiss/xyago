@@ -1,0 +1,284 @@
+package views 
+
+import (
+	"github.com/zilllaiss/fest"
+	"fmt"
+	"slices"
+	"time"
+	"xyago/types"
+)
+
+templ Index(mds []types.Markdown) {
+{{
+	title := fest.GetTitle(ctx)
+	if len(mds) > 3 {
+		mds = mds[:3]
+	}
+}}
+	@Base(title) {
+		@Nav()
+		<img class="icon-main" src="/assets/icons/XYAS_fullcircle.svg" alt="xyassraist logo"/>
+		<main class="main-single-center">
+			<h2><a href="/blog/1">Recent Posts</a></h2>
+			<div class="grid-main">
+				for i, v := range mds {
+					@homePost(i, v, mds)
+				}
+			</div>
+		</main>
+	}
+}
+
+templ NotFound() {
+	@SingleNoH2("404") {
+		<main class="main-single-center">
+			<h2>404</h2>
+			<p>It looks like you are lost!</p>
+		</main>
+	}
+	<style>
+        h2 {
+            font-size: 70px;
+        }
+        
+        p {
+            font-size: 25px;
+            font-family: calibri, 'Segoe UI', Arial;
+        }
+    </style>
+}
+
+templ About() {
+	@SingleNoH2(fest.GetTitle(ctx)) {
+		<main class="main-container">
+			<h2>About</h2>
+			<div class="main-single-child">
+				<p>This site is for personal use of Zill_Laiss</p>
+			</div>
+		</main>
+	}
+}
+
+templ Tags(tags []string) {
+	@SingleNoH2(fest.GetTitle(ctx)) {
+		<main class="main-container">
+			<h2>Tags</h2>
+			<div class="main-single-child">
+				<ul>
+					for _, t := range tags {
+						<li><a href={ surl("/tags/%v", t) }>{ t }</a></li>
+					}
+				</ul>
+			</div>
+		</main>
+	}
+}
+
+templ Tag(tagsMap map[string][]*types.Markdown) {
+{{
+	tag := fest.GetTitle(ctx)
+	posts := tagsMap[tag]
+
+	slices.SortFunc(posts, func(a, b *types.Markdown) int {
+		t1, err := time.Parse(time.DateOnly, a.Frontmatter.PublishedAt)
+		if err != nil {
+			return 0
+		}
+		t2, err := time.Parse(time.DateOnly, b.Frontmatter.PublishedAt)
+		if err != nil {
+			return 0
+		}
+		return int(t1.Sub(t2)) * -1
+	})
+}}
+	@SingleNoH2(tag) {
+		<main class="main-container">
+			<h2>{ tag }</h2>
+			<article class="main-single-child">
+				<p>page tagged with { tag }</p>
+				<ul>
+					for _, p := range posts {
+						<li><a href={ surl("/posts/%v", p.Slug) }>{ p.Frontmatter.Title }</a></li>
+					}
+				</ul>
+			</article>
+		</main>
+	}
+}
+
+templ Blog(uniqueTags map[string][]*types.Markdown, tagsSorted []string, page fest.Pagination[types.Markdown]) {
+	@SingleNoH2("Blog") {
+		<div class="main-container">
+			<h2>Blog</h2>
+			<main class="main-pair">
+				<article class="post-field">
+					for _, post := range page.Chunk {
+						{{ url := surl("/posts/%v", post.Slug) }}
+						<div class="post">
+							<section class="post-date">
+								{ post.Frontmatter.PublishedAt }
+							</section>
+							<section class="post-container">
+								<section class="post-header">
+									<h3 class="post-title">
+										<a href={ url }>
+											{ post.Frontmatter.Title }
+										</a>
+									</h3>
+									if post.Frontmatter.Tags != nil {
+										{{ slices.Sort(post.Frontmatter.Tags) }}
+										<div>
+											for _, t := range post.Frontmatter.Tags {
+												<span class="tag">
+													<a href={ surl("/tags/%v", t) }>{ t }</a>
+												</span>
+											}
+										</div>
+									}
+									<p>{ post.Frontmatter.Preamble }</p>
+									if post.Frontmatter.Eyecatch != nil {
+										<img
+											src={ post.Frontmatter.Eyecatch.Path }
+											alt={ post.Frontmatter.Eyecatch.Alt }
+										/>
+									}
+									<p class="readmore"><a href={ url }>...read post</a></p>
+								</section>
+							</section>
+						</div>
+					}
+				</article>
+				<aside class="bar-right">
+					<h3>Tags</h3>
+					<ul class="section-tag">
+						for _, t := range tagsSorted {
+                            {{ tagPosts := uniqueTags[t] }}
+							<li>
+								<a href={ surl("/tags/%v", t) }>
+									{ t } ({ len(tagPosts) })
+								</a>
+							</li>
+						}
+					</ul>
+					<section class="icon">
+						<h3>Find me on:</h3>
+						<div class="icon-container">
+							<a href="https://github.com/zilllaiss/">
+								<img class="icon-small" src="/assets/icons/github.svg" alt="github"/>
+								github.com/zilllaiss/ 
+							</a>
+						</div>
+						<div class="icon-container">
+							<img class="icon-small" src="/assets/icons/discord.svg" alt="discord"/>
+							<span>zill_laiss</span>
+						</div>
+					</section>
+				</aside>
+			</main>
+		</div>
+		<div class="pagination">
+			if page.Current - 1 > 0 {
+				<div class="pagination-page"><a href={ surl("/blog/%d", page.Current-1) }>Prev</a></div>
+			}
+			if page.Total > 7 {
+				<div class="pagination-current">{ page.Current }</div>
+			}
+			if page.Current != page.Total {
+				<div class="pagination-page"><a href={ surl("/blog/%d", page.Total) }>Next</a></div>
+			}
+		</div>
+	}
+}
+
+templ Post(post types.Markdown) {
+	@SingleNoH2(fest.GetTitle(ctx)) {
+		<main class="main-pair">
+			<article class="post-field">
+				<section class="post-header">
+					<h1 class="post-title">{ post.Frontmatter.Title }</h1>
+					<div class="post-date">
+						Written by { post.Frontmatter.Author }
+						<span>on { post.Frontmatter.PublishedAt }</span>
+					</div>
+					if post.Frontmatter.Tags != nil {
+						<div>
+							for _, t := range post.Frontmatter.Tags {
+								<span class="tag"><a href={ surl("/tags/%v", t) }>{ t }</a></span>
+							}
+						</div>
+					}
+					<p style="margin-top: 30px">{ post.Frontmatter.Preamble }</p>
+					if post.Frontmatter.Eyecatch != nil {
+						<img src={ post.Frontmatter.Eyecatch.Path } alt={ post.Frontmatter.Eyecatch.Alt }/>
+					}
+				</section>
+				<section class="post-content">
+					@templ.Raw(post.Content)
+				</section>
+			</article>
+			<aside class="bar-right">
+				if len(post.TOC) > 0 {
+					<div
+						class="toc"
+						x-data="{ scrolled: false }"
+						@scroll.window="scrolled = window.scrollY >= 80"
+						x-bind:style="scrolled ? 'position: fixed; top: 80px' : '' "
+					>
+						<h2><a href="#">On this page:</a></h2>
+						@templ.Raw(post.TOC)
+					</div>
+				}
+			</aside>
+		</main>
+		<style>
+            .post-date span {
+                    margin-left: 0;
+            }
+        </style>
+		<script defer src="/assets/js/lib/alpine.js"></script>
+	}
+}
+
+templ homePost(i int, v types.Markdown, mds []types.Markdown) {
+{{
+	className := "grid-first"
+	style := ""
+
+	if i != 0 {
+		className = "grid-item"
+	}
+
+	if len(mds) == 2 && i == 1 {
+		style = "grid-column-start: 1; grid-column-end: 3"
+	}
+	url := surl("/posts/%v", v.Slug)
+}}
+	<article class={ className } style={ style }>
+		<div class="post-header">
+			<h3 class="post-title"><a href={ url }>{ v.Frontmatter.Title }</a></h3>
+			<div class="post-date">
+				Written by { v.Frontmatter.Author }
+				<span>on { v.Frontmatter.PublishedAt }</span>
+			</div>
+			if len(v.Frontmatter.Tags) > 0 {
+                {{ pFm := &v.Frontmatter }}
+                {{ slices.Sort(pFm.Tags)}}
+				<div>
+					for _, t := range v.Frontmatter.Tags {
+						<span class="tag">
+							<a href={ surl("/tags/%v", t) }>{ t }</a>
+						</span>
+					}
+				</div>
+			}
+			<p>{ v.Frontmatter.Preamble }</p>
+			if v.Frontmatter.Eyecatch != nil {
+				<img
+					src={ fmt.Sprintf( "/assets/images/%v", v.Frontmatter.Eyecatch.Path, ) }
+					alt={ v.Frontmatter.Eyecatch.Alt }
+				/>
+			}
+			<p class="readmore"><a href={ url }>...read post</a></p>
+		</div>
+	</article>
+}

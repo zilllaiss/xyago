@@ -1,0 +1,7 @@
+# generated or imported
+.task
+*_templ.go
+**/lib/*
+assets/styles
+dist
+main
