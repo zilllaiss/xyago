@@ -11,6 +11,7 @@ vars:
 
 tasks:
   build:all:
+    desc: build all the project components.
     aliases:
       - b-all
     cmds:
@@ -24,6 +25,7 @@ tasks:
       - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST_LOC}}" ./bin/xyago
 
   build:watch:
+    desc: development mode with hot-reload
     aliases:
       - b
     sources:
@@ -35,6 +37,7 @@ tasks:
       - task: build
 
   build:prod:
+    desc: build the project for production
     vars:
       PROD:
         'true'

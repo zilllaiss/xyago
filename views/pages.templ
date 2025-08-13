@@ -1,20 +1,20 @@
 package views 
 
 import (
-	"github.com/zilllaiss/fest"
 	"fmt"
+	"github.com/zilllaiss/fest"
 	"slices"
 	"time"
 	"xyago/types"
 )
 
 templ Index(mds []types.Markdown) {
-{{
+	{{
 	title := fest.GetTitle(ctx)
 	if len(mds) > 3 {
 		mds = mds[:3]
 	}
-}}
+	}}
 	@Base(title) {
 		@Nav()
 		<img class="icon-main" src="/assets/icons/XYAS_fullcircle.svg" alt="xyassraist logo"/>
@@ -75,7 +75,7 @@ templ Tags(tags []string) {
 }
 
 templ Tag(tagsMap map[string][]*types.Markdown) {
-{{
+	{{
 	tag := fest.GetTitle(ctx)
 	posts := tagsMap[tag]
 
@@ -90,7 +90,7 @@ templ Tag(tagsMap map[string][]*types.Markdown) {
 		}
 		return int(t1.Sub(t2)) * -1
 	})
-}}
+	}}
 	@SingleNoH2(tag) {
 		<main class="main-container">
 			<h2>{ tag }</h2>
@@ -152,7 +152,7 @@ templ Blog(uniqueTags map[string][]*types.Markdown, tagsSorted []string, page fe
 					<h3>Tags</h3>
 					<ul class="section-tag">
 						for _, t := range tagsSorted {
-                            {{ tagPosts := uniqueTags[t] }}
+							{{ tagPosts := uniqueTags[t] }}
 							<li>
 								<a href={ surl("/tags/%v", t) }>
 									{ t } ({ len(tagPosts) })
@@ -199,6 +199,10 @@ templ Post(post types.Markdown) {
 					<div class="post-date">
 						Written by { post.Frontmatter.Author }
 						<span>on { post.Frontmatter.PublishedAt }</span>
+						if len(post.Frontmatter.UpdatedAt) > 0 && 
+                            post.Frontmatter.UpdatedAt != post.Frontmatter.PublishedAt {
+							<span>(Updated on { post.Frontmatter.UpdatedAt })</span>
+						}
 					</div>
 					if post.Frontmatter.Tags != nil {
 						<div>
@@ -240,7 +244,7 @@ templ Post(post types.Markdown) {
 }
 
 templ homePost(i int, v types.Markdown, mds []types.Markdown) {
-{{
+	{{
 	className := "grid-first"
 	style := ""
 
@@ -252,7 +256,7 @@ templ homePost(i int, v types.Markdown, mds []types.Markdown) {
 		style = "grid-column-start: 1; grid-column-end: 3"
 	}
 	url := surl("/posts/%v", v.Slug)
-}}
+	}}
 	<article class={ className } style={ style }>
 		<div class="post-header">
 			<h3 class="post-title"><a href={ url }>{ v.Frontmatter.Title }</a></h3>
@@ -261,8 +265,8 @@ templ homePost(i int, v types.Markdown, mds []types.Markdown) {
 				<span>on { v.Frontmatter.PublishedAt }</span>
 			</div>
 			if len(v.Frontmatter.Tags) > 0 {
-                {{ pFm := &v.Frontmatter }}
-                {{ slices.Sort(pFm.Tags)}}
+				{{ pFm := &v.Frontmatter }}
+				{{ slices.Sort(pFm.Tags) }}
 				<div>
 					for _, t := range v.Frontmatter.Tags {
 						<span class="tag">
@@ -274,7 +278,7 @@ templ homePost(i int, v types.Markdown, mds []types.Markdown) {
 			<p>{ v.Frontmatter.Preamble }</p>
 			if v.Frontmatter.Eyecatch != nil {
 				<img
-					src={ fmt.Sprintf( "/assets/images/%v", v.Frontmatter.Eyecatch.Path, ) }
+					src={ fmt.Sprintf("/assets/images/%v", v.Frontmatter.Eyecatch.Path) }
 					alt={ v.Frontmatter.Eyecatch.Alt }
 				/>
 			}

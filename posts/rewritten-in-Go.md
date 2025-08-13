@@ -1,6 +1,7 @@
 ---
 title: Rewritten in Go
 published: 2025-07-23
+updated: 2025-08-13
 preamble: | 
     More than a year ago, I was relly excited to build this site with Astro, a popular static site generator.
     However, that excitement ended up to not last very long.
@@ -21,8 +22,6 @@ Most of the change is in the routing. Astro follow a folder-based routing. That 
 Now, the routing in Go is more similar to router library like Chi (actually one of my inspiration) or Express.js.
 
 Another big change that I had to make is that I need to implemented convert Markdown files myself, although it is easily handled as Go libraries for that already exists.
-
-> Side note: As I think most people do, I cr*nged at my old (and my first and only) post.
 
 ## The Reasons Why
 
