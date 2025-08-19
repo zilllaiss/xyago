@@ -3,7 +3,7 @@ version: '3'
 
 vars:
   JSLIB_PATH: assets/js/lib
-  TEMPL_VER: 'v0.3.906'
+  TEMPL_VER: 'v0.3.920'
   ALPINEJS_VER: '3.13.7'
 
   DEST_LOC: '{{.ROOT_DIR}}/../zilllaiss.github.io'
@@ -100,11 +100,11 @@ tasks:
   deps:templ:
     internal: true
     status: 
-      - command -v templ >> /dev/null
+      - go tool templ --version
       - '[[ $(templ version) == {{.TEMPL_VER}} ]]'
     cmds:
       - echo "installing templ..."
-      - go install github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}} 
+      - go get -tool github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}} 
       - go get github.com/a-h/templ@{{.TEMPL_VER}}
 
   generate:templ:
@@ -115,7 +115,7 @@ tasks:
     generates:
       - views/*_templ.go
     cmds:
-      - templ generate
+      - go tool templ generate
 
   generate:css:
     aliases:

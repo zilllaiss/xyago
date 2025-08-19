@@ -84,7 +84,9 @@ func parseMarkdownFiles(path string) ([]types.Markdown, error) {
 		ptrFestMd.Content = mdBuf.String()
 		ptrFestMd.TOC = tocBuf.String()
 
-		fm = append(fm, festMd)
+		if festMd.Frontmatter.Public {
+			fm = append(fm, festMd)
+		}
 	}
 
 	for k := range tagsMap {

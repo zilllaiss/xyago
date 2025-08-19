@@ -1,5 +1,6 @@
 ---
 title: Rewritten in Go
+public: true
 published: 2025-07-23
 updated: 2025-08-13
 preamble: | 
