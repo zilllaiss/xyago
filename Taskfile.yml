@@ -51,6 +51,39 @@ tasks:
       - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST_LOC}}" ./bin/xyago
       - prettier --write "{{.DEST_LOC}}/**/**.html"
 
+  new:
+    desc: initialize a new post
+    requires:
+      vars:
+        - SLUG
+    preconditions:
+      - sh: '! test -f ./posts/{{.SLUG}}.md'
+        msg: File already exists
+    silent: true
+    vars:
+      TITLE: '{{.TITLE | default "Hello, world!"}}'
+      FILEPATH: ./posts/{{.SLUG}}.md
+      CURRENT_DATE:
+        sh: date -I
+      TEMPLATE: |
+        ---
+        title: {{.TITLE}}
+        public: false
+        published: {{.CURRENT_DATE}}
+        updated: ''
+        preamble: Hello, world!
+        author: Zill_Laiss
+        tags:
+          - draft
+        ---
+
+        ## Draft
+                
+    cmds:
+      - echo "{{.TEMPLATE}}" > {{.FILEPATH}}
+      - echo '{{.FILEPATH}} is succesfully created.'
+  
+
   run:
     cmds:
       - task: build:watch
