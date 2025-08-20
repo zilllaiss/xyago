@@ -1,14 +1,16 @@
 package views 
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/zilllaiss/fest"
+	"github.com/zilllaiss/fest/markdown"
 	"slices"
 	"time"
 	"xyago/types"
 )
 
-templ Index(mds []types.Markdown) {
+templ Index(mds []*markdown.MarkdownData) {
 	{{
 	title := fest.GetTitle(ctx)
 	if len(mds) > 3 {
@@ -74,23 +76,36 @@ templ Tags(tags []string) {
 	}
 }
 
-templ Tag(tagsMap map[string][]*types.Markdown) {
+templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 	{{
 	tag := fest.GetTitle(ctx)
 	posts := tagsMap[tag]
 
-	slices.SortFunc(posts, func(a, b *types.Markdown) int {
-		t1, err := time.Parse(time.DateOnly, a.Frontmatter.PublishedAt)
-		if err != nil {
+	var sortErr error
+
+	slices.SortFunc(posts, func(a, b *markdown.MarkdownData) int {
+		aFm := &types.Frontmatter{}
+		bFm := &types.Frontmatter{}
+
+		err1 := a.GetFrontmatter(aFm)
+		err2 := a.GetFrontmatter(bFm)
+
+		if err := cmp.Or(err1, err2); err != nil {
+			sortErr = err
 			return 0
 		}
-		t2, err := time.Parse(time.DateOnly, b.Frontmatter.PublishedAt)
-		if err != nil {
+
+		t1, err1 := time.Parse(time.DateOnly, aFm.PublishedAt)
+		t2, err2 := time.Parse(time.DateOnly, aFm.PublishedAt)
+
+		if err := cmp.Or(err1, err2); err != nil {
+			sortErr = err
 			return 0
 		}
 		return int(t1.Sub(t2)) * -1
 	})
 	}}
+	{ wrapErr("", sortErr) }
 	@SingleNoH2(tag) {
 		<main class="main-container">
 			<h2>{ tag }</h2>
@@ -98,7 +113,11 @@ templ Tag(tagsMap map[string][]*types.Markdown) {
 				<p>page tagged with { tag }</p>
 				<ul>
 					for _, p := range posts {
-						<li><a href={ surl("/posts/%v", p.Slug) }>{ p.Frontmatter.Title }</a></li>
+						{{ fm := &types.Frontmatter{} }}
+						if err := p.GetFrontmatter(fm); err != nil {
+							{ wrapErr("", err) }
+						}
+						<li><a href={ surl("/posts/%v", p.Slug) }>{ fm.Title }</a></li>
 					}
 				</ul>
 			</article>
@@ -106,7 +125,7 @@ templ Tag(tagsMap map[string][]*types.Markdown) {
 	}
 }
 
-templ Blog(uniqueTags map[string][]*types.Markdown, tagsSorted []string, page fest.Pagination[types.Markdown]) {
+templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, page fest.Pagination[*markdown.MarkdownData]) {
 	@SingleNoH2("Blog") {
 		<div class="main-container">
 			<h2>Blog</h2>
@@ -114,32 +133,36 @@ templ Blog(uniqueTags map[string][]*types.Markdown, tagsSorted []string, page fe
 				<article class="post-field">
 					for _, post := range page.Chunk {
 						{{ url := surl("/posts/%v", post.Slug) }}
+						{{ fm := &types.Frontmatter{} }}
+						if err := post.GetFrontmatter(fm); err != nil {
+							{ wrapErr("", err) }
+						}
 						<div class="post">
 							<section class="post-date">
-								{ post.Frontmatter.PublishedAt }
+								{ fm.PublishedAt }
 							</section>
 							<section class="post-container">
 								<section class="post-header">
 									<h3 class="post-title">
 										<a href={ url }>
-											{ post.Frontmatter.Title }
+											{ fm.Title }
 										</a>
 									</h3>
-									if post.Frontmatter.Tags != nil {
-										{{ slices.Sort(post.Frontmatter.Tags) }}
+									if fm.Tags != nil {
+										{{ slices.Sort(fm.Tags) }}
 										<div>
-											for _, t := range post.Frontmatter.Tags {
+											for _, t := range fm.Tags {
 												<span class="tag">
 													<a href={ surl("/tags/%v", t) }>{ t }</a>
 												</span>
 											}
 										</div>
 									}
-									<p>{ post.Frontmatter.Preamble }</p>
-									if post.Frontmatter.Eyecatch != nil {
+									<p>{ fm.Preamble }</p>
+									if fm.Eyecatch != nil {
 										<img
-											src={ post.Frontmatter.Eyecatch.Path }
-											alt={ post.Frontmatter.Eyecatch.Alt }
+											src={ fm.Eyecatch.Path }
+											alt={ fm.Eyecatch.Alt }
 										/>
 									}
 									<p class="readmore"><a href={ url }>...read post</a></p>
@@ -190,30 +213,34 @@ templ Blog(uniqueTags map[string][]*types.Markdown, tagsSorted []string, page fe
 	}
 }
 
-templ Post(post types.Markdown) {
+templ Post(post *markdown.MarkdownData) {
+	{{ fm := &types.Frontmatter{} }}
+	if err := post.GetFrontmatter(fm); err != nil {
+		{ wrapErr("", err) }
+	}
 	@SingleNoH2(fest.GetTitle(ctx)) {
 		<main class="main-pair">
 			<article class="post-field">
 				<section class="post-header">
-					<h1 class="post-title">{ post.Frontmatter.Title }</h1>
+					<h1 class="post-title">{ fm.Title }</h1>
 					<div class="post-date">
-						Written by { post.Frontmatter.Author }
-						<span>on { post.Frontmatter.PublishedAt }</span>
-						if len(post.Frontmatter.UpdatedAt) > 0 && 
-                            post.Frontmatter.UpdatedAt != post.Frontmatter.PublishedAt {
-							<span>(Updated on { post.Frontmatter.UpdatedAt })</span>
+						Written by { fm.Author }
+						<span>on { fm.PublishedAt }</span>
+						if len(fm.UpdatedAt) > 0 && 
+                            fm.UpdatedAt != fm.PublishedAt {
+							<span>(Updated on { fm.UpdatedAt })</span>
 						}
 					</div>
-					if post.Frontmatter.Tags != nil {
+					if fm.Tags != nil {
 						<div>
-							for _, t := range post.Frontmatter.Tags {
+							for _, t := range fm.Tags {
 								<span class="tag"><a href={ surl("/tags/%v", t) }>{ t }</a></span>
 							}
 						</div>
 					}
-					<p style="margin-top: 30px">{ post.Frontmatter.Preamble }</p>
-					if post.Frontmatter.Eyecatch != nil {
-						<img src={ post.Frontmatter.Eyecatch.Path } alt={ post.Frontmatter.Eyecatch.Alt }/>
+					<p style="margin-top: 30px">{ fm.Preamble }</p>
+					if fm.Eyecatch != nil {
+						<img src={ fm.Eyecatch.Path } alt={ fm.Eyecatch.Alt }/>
 					}
 				</section>
 				<section class="post-content">
@@ -243,10 +270,13 @@ templ Post(post types.Markdown) {
 	}
 }
 
-templ homePost(i int, v types.Markdown, mds []types.Markdown) {
+templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 	{{
 	className := "grid-first"
 	style := ""
+
+	fm := &types.Frontmatter{}
+	err := v.GetFrontmatter(fm)
 
 	if i != 0 {
 		className = "grid-item"
@@ -259,27 +289,26 @@ templ homePost(i int, v types.Markdown, mds []types.Markdown) {
 	}}
 	<article class={ className } style={ style }>
 		<div class="post-header">
-			<h3 class="post-title"><a href={ url }>{ v.Frontmatter.Title }</a></h3>
+			<h3 class="post-title"><a href={ url }>{ fm.Title, err }</a></h3>
 			<div class="post-date">
-				Written by { v.Frontmatter.Author }
-				<span>on { v.Frontmatter.PublishedAt }</span>
+				Written by { fm.Author }
+				<span>on { fm.PublishedAt }</span>
 			</div>
-			if len(v.Frontmatter.Tags) > 0 {
-				{{ pFm := &v.Frontmatter }}
-				{{ slices.Sort(pFm.Tags) }}
+			if len(fm.Tags) > 0 {
+				{{ slices.Sort(fm.Tags) }}
 				<div>
-					for _, t := range v.Frontmatter.Tags {
+					for _, t := range fm.Tags {
 						<span class="tag">
 							<a href={ surl("/tags/%v", t) }>{ t }</a>
 						</span>
 					}
 				</div>
 			}
-			<p>{ v.Frontmatter.Preamble }</p>
-			if v.Frontmatter.Eyecatch != nil {
+			<p>{ fm.Preamble }</p>
+			if fm.Eyecatch != nil {
 				<img
-					src={ fmt.Sprintf("/assets/images/%v", v.Frontmatter.Eyecatch.Path) }
-					alt={ v.Frontmatter.Eyecatch.Alt }
+					src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Path) }
+					alt={ fm.Eyecatch.Alt }
 				/>
 			}
 			<p class="readmore"><a href={ url }>...read post</a></p>

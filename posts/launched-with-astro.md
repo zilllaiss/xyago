@@ -1,5 +1,6 @@
 ---
 title: "*Launched* with Astro!"
+public: true
 published: 2024-04-04
 preamble: Get it? Because Astro's logo is a rocket, and this site is made with Astro! My bad my bad. I know that's not a great way to make a first post with, but I wanted to make that pun so bad. So with the bad joke out of the way, let's get to the heart of the matter.
 author: Zill_Laiss

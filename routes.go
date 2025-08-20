@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/zilllaiss/fest"
-	"github.com/zilllaiss/fest/temfest"
-	"xyago/types"
 	"xyago/views"
+
+	"github.com/zilllaiss/fest"
+	"github.com/zilllaiss/fest/markdown"
+	"github.com/zilllaiss/fest/temfest"
 
 	"github.com/a-h/templ"
 )
@@ -42,16 +43,16 @@ func generator() *fest.Generator {
 func index(ctx context.Context) (templ.Component, error) { return views.Index(posts), nil }
 
 func blogs(ctx context.Context,
-	rp *fest.RoutesParam[*fest.Pagination[types.Markdown]],
+	rp *fest.RouteParam[*fest.Pagination[*markdown.MarkdownData]],
 ) (templ.Component, error) {
 	return views.Blog(tagsMap, tagsSorted, *rp.GetItem()), nil
 }
 
-func tagsFn(ctx context.Context, rp *fest.RoutesParam[string]) (templ.Component, error) {
+func tagsFn(ctx context.Context, rp *fest.RouteParam[string]) (templ.Component, error) {
 	return views.Tag(tagsMap), nil
 }
 
-func postsFn(ctx context.Context, rp *fest.RoutesParam[types.Markdown]) (templ.Component, error) {
+func postsFn(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
 	post := rp.GetItem()
 	rp.SetSlug(post.Slug)
 	return views.Post(post), nil

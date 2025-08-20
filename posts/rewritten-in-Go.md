@@ -1,7 +1,8 @@
 ---
 title: Rewritten in Go
+public: true
 published: 2025-07-23
-updated: 2025-08-13
+updated: 2025-08-20
 preamble: | 
     More than a year ago, I was relly excited to build this site with Astro, a popular static site generator.
     However, that excitement ended up to not last very long.
@@ -44,7 +45,7 @@ That’s just not what I want right now.
 
 ## What’s Next
 
-1. I’m migrating from Sass to plain CSS** 
+1. I’m migrating from Sass to plain CSS
 
 Sass doesn’t break as often, but it still does occasionally. I also considered Tailwind, but using it with Templ is not a good of an idea. Go build is fast, but if you need to change something in HTML will need you to rebuild the binary. So it can get tedious pretty fast, especially since I'm using older and weaker laptop.
 
