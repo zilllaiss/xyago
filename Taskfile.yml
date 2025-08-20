@@ -6,7 +6,8 @@ vars:
   TEMPL_VER: 'v0.3.920'
   ALPINEJS_VER: '3.13.7'
 
-  DEST_LOC: '{{.ROOT_DIR}}/../zilllaiss.github.io'
+  PROD_DEST: '{{.ROOT_DIR}}/../zilllaiss.github.io'
+  DEV_DEST: '{{.ROOT_DIR}}/dist'
   PROD: 'false'
 
 tasks:
@@ -20,36 +21,18 @@ tasks:
       - task: build
 
   build:
-    cmds:
-      - go build -o bin/xyago 
-      - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST_LOC}}" ./bin/xyago
-
-  build:watch:
-    desc: development mode with hot-reload
+    desc: build the project
     aliases:
       - b
-    sources:
-      - '*.go'
-      - '**/**.go'
-    generates:
-      - bin/xyago
-    cmds:
-      - task: build
-
-  build:prod:
-    desc: build the project for production
     vars:
-      PROD:
-        'true'
-    aliases:
-      - bp
+      DEST: '{{if eq .PROD "true"}}{{.PROD_DEST}}{{else}}{{.DEV_DEST}}{{end}}'
     cmds:
-      - rm -rf {{.DEST_LOC}}/*
+      - rm -rf {{.DEST}}/*
       - task: gen
       - sleep 1
       - go build -o bin/xyago 
-      - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST_LOC}}" ./bin/xyago
-      - prettier --write "{{.DEST_LOC}}/**/**.html"
+      - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST}}" ./bin/xyago
+      - prettier --write "{{.DEST}}/**/**.html"
 
   new:
     desc: initialize a new post
@@ -82,7 +65,6 @@ tasks:
     cmds:
       - echo "{{.TEMPLATE}}" > {{.FILEPATH}}
       - echo '{{.FILEPATH}} is succesfully created.'
-  
 
   run:
     cmds:
