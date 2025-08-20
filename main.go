@@ -9,7 +9,9 @@ import (
 func main() {
 	var err error
 
-	mdp := md.NewMarkdown()
+	m := md.NewMarkdown()
+
+	mdp := &WrappedMarkdownParser{mp: m}
 
 	posts, err = mdp.ParseFiles("posts")
 	if err != nil {
