@@ -83,12 +83,12 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 
 	var sortErr error
 
-	slices.SortFunc(posts, func(a, b *markdown.MarkdownData) int {
+	slices.SortStableFunc(posts, func(a, b *markdown.MarkdownData) int {
 		aFm := &types.Frontmatter{}
 		bFm := &types.Frontmatter{}
 
 		err1 := a.GetFrontmatter(aFm)
-		err2 := a.GetFrontmatter(bFm)
+		err2 := b.GetFrontmatter(bFm)
 
 		if err := cmp.Or(err1, err2); err != nil {
 			sortErr = err
@@ -96,7 +96,7 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 		}
 
 		t1, err1 := time.Parse(time.DateOnly, aFm.PublishedAt)
-		t2, err2 := time.Parse(time.DateOnly, aFm.PublishedAt)
+		t2, err2 := time.Parse(time.DateOnly, bFm.PublishedAt)
 
 		if err := cmp.Or(err1, err2); err != nil {
 			sortErr = err
@@ -232,6 +232,7 @@ templ Post(post *markdown.MarkdownData) {
 						}
 					</div>
 					if fm.Tags != nil {
+						{{ slices.Sort(fm.Tags) }}
 						<div>
 							for _, t := range fm.Tags {
 								<span class="tag"><a href={ surl("/tags/%v", t) }>{ t }</a></span>
