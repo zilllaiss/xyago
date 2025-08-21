@@ -3,20 +3,22 @@ package main
 import (
 	"log"
 
-	md "github.com/zilllaiss/fest/markdown"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/renderer/html"
+	"github.com/zilllaiss/fest/markdown"
 )
 
 func main() {
 	var err error
 
-	m := md.NewMarkdown()
+	m := markdown.NewMarkdown(goldmark.WithRendererOptions(html.WithUnsafe()))
+	wmp := &WrappedMarkdownParser{mp: m}
 
-	mdp := &WrappedMarkdownParser{mp: m}
-
-	posts, err = mdp.ParseFiles("posts")
+	posts, err = wmp.ParseFiles("posts")
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	if err := sortMarkdownFiles(posts); err != nil {
 		log.Fatalln(err)
 	}

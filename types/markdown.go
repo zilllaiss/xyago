@@ -14,6 +14,7 @@ type Frontmatter struct {
 }
 
 type Eyecatch struct {
-	Path string `yaml:"path"`
-	Alt  string `yaml:"alt"`
+	Filename string `yaml:"filename"` // relative from /assets/images
+	Alt      string `yaml:"alt"`
+	Hover    string `yaml:"hover"` // title attribute
 }

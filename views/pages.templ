@@ -161,8 +161,9 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 									<p>{ fm.Preamble }</p>
 									if fm.Eyecatch != nil {
 										<img
-											src={ fm.Eyecatch.Path }
+											src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
 											alt={ fm.Eyecatch.Alt }
+											title={ fm.Eyecatch.Hover }
 										/>
 									}
 									<p class="readmore"><a href={ url }>...read post</a></p>
@@ -241,7 +242,11 @@ templ Post(post *markdown.MarkdownData) {
 					}
 					<p style="margin-top: 30px">{ fm.Preamble }</p>
 					if fm.Eyecatch != nil {
-						<img src={ fm.Eyecatch.Path } alt={ fm.Eyecatch.Alt }/>
+						<img
+							src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
+							alt={ fm.Eyecatch.Alt }
+							title={ fm.Eyecatch.Hover }
+						/>
 					}
 				</section>
 				<section class="post-content">
@@ -249,17 +254,18 @@ templ Post(post *markdown.MarkdownData) {
 				</section>
 			</article>
 			<aside class="bar-right">
-				if len(post.TOC) > 0 {
-					<div
-						class="toc"
-						x-data="{ scrolled: false }"
-						@scroll.window="scrolled = window.scrollY >= 80"
-						x-bind:style="scrolled ? 'position: fixed; top: 80px' : '' "
-					>
-						<h2><a href="#">On this page:</a></h2>
+				<div
+					class="toc"
+					x-data="{ scrolled: false }"
+					@scroll.window="scrolled = window.scrollY >= 80"
+					x-bind:style="scrolled ? 'position: fixed; top: 80px' : '' "
+				>
+					<h2>Table of Content</h2>
+					<p style={"margin: 0", "margin-top: 0.3rem"}><a href="#">{ fm.Title }</a></p>
+					if len(post.TOC) > 0 {
 						@templ.Raw(post.TOC)
-					</div>
-				}
+					}
+				</div>
 			</aside>
 		</main>
 		<style>
@@ -307,12 +313,14 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 			}
 			<p>{ fm.Preamble }</p>
 			if fm.Eyecatch != nil {
-				<img
-					src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Path) }
-					alt={ fm.Eyecatch.Alt }
-				/>
+				<div>
+					<img
+						src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
+						alt={ fm.Eyecatch.Alt }
+						title={ fm.Eyecatch.Hover }
+					/>
+				</div>
 			}
-			<p class="readmore"><a href={ url }>...read post</a></p>
 		</div>
 	</article>
 }

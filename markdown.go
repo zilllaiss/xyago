@@ -51,7 +51,9 @@ func (wmp *WrappedMarkdownParser) ParseFiles(path string) ([]*markdown.MarkdownD
 		if err != nil {
 			return fmt.Errorf("error parsing file: %w", err)
 		}
-		m = append(m, f)
+		if f != nil {
+			m = append(m, f)
+		}
 		return nil
 	}); err != nil {
 		return nil, fmt.Errorf("error scanning markdown, %w", err)

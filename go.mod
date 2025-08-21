@@ -29,7 +29,7 @@ require (
 
 require (
 	github.com/a-h/templ v0.3.943
-	github.com/zilllaiss/fest v0.5.0
+	github.com/zilllaiss/fest v0.6.0
 )
 
 tool github.com/a-h/templ/cmd/templ

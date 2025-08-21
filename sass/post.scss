@@ -47,7 +47,7 @@
   }
 
   &-container {
-    @include app.borderleft(2px solid #8e8e8e, 15px);
+    @include app.borderleft(2px solid var(--color-border), 15px);
     line-height: 1.5rem;
   }
 
@@ -63,6 +63,8 @@
       max-width: calc(var(--outerwidth) - var(--bar-width) - 100px);
       max-height: auto;
       margin-top: 14px;
+      display: block;
+      margin: auto;
     }
   }
 
@@ -114,6 +116,13 @@
       @include app.boxwithborder(#000, 2px);
       display: flex;
       padding: 16px;
+    }
+
+    img {
+      max-width: 90%;
+      display: block;
+      margin: auto;
+      margin-bottom: 1rem;
     }
   }
 }
