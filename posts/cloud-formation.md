@@ -3,7 +3,7 @@ title: Cloud formation
 public: true
 published: 2025-08-21
 updated: ''
-preamble: A few days ago, I see this amazing cloud formations at sunrise.
+preamble: A few days ago, I see this amazing cloud formation at sunrise.
 author: Zill_Laiss
 tags:
   - landscape
@@ -25,7 +25,7 @@ Is it altocomulus? Stratocomulus? I'm not sure. Nevertheless, it's beautiful.
 
 ## Portraits
 
-***Long image aheads!***
+***Long images ahead!***
 
 ![cloud portrait](/assets/images/20250818_062127_v1.jpg "Cloud formation (portrait)")
 ![cloud with sunrise portrait](/assets/images/20250818_061630_v1.jpg "With sunrise (portrait)")

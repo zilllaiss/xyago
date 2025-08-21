@@ -46,7 +46,7 @@ html {
   &-main {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: clamp(600px, 900px, 1200px);
+    // width: clamp(40rem, 80%, 80rem);
     gap: 1.5rem;
   }
 
@@ -120,7 +120,7 @@ html {
   &-main {
     display: block;
     margin: 40px auto 0 auto;
-    width: 121px;
+    width: 7.5rem;
     height: auto;
   }
 
@@ -145,7 +145,7 @@ html {
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
   body {
     overflow-x: scroll;
     width: unset;
@@ -178,9 +178,17 @@ html {
 
   .grid {
     &-main {
+      display: revert;
       max-width: 100vh;
-      width: unset;
       margin-left: 0;
+    }
+
+    &-item {
+      border: none;
+    }
+
+    &-first {
+      border: none;
     }
   }
 
