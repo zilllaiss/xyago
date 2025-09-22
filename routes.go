@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"xyago/types"
 	"xyago/views"
 
 	"github.com/zilllaiss/fest"
@@ -54,6 +55,14 @@ func tagsFn(ctx context.Context, rp *fest.RouteParam[string]) (templ.Component, 
 
 func postsFn(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
 	post := rp.GetItem()
+	fm := &types.Frontmatter{}
+
+	if err := post.GetFrontmatter(fm); err != nil {
+		return nil, err
+	}
+
 	rp.SetSlug(post.Slug)
+	rp.SetTitle(fm.Title)
+
 	return views.Post(post), nil
 }

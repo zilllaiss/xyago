@@ -3,7 +3,7 @@ module xyago
 go 1.24.4
 
 require (
-	github.com/yuin/goldmark v1.7.13 // indirect
+	github.com/yuin/goldmark v1.7.13
 	go.abhg.dev/goldmark/frontmatter v0.2.0 // indirect
 )
 
@@ -29,7 +29,7 @@ require (
 
 require (
 	github.com/a-h/templ v0.3.943
-	github.com/zilllaiss/fest v0.6.0
+	github.com/zilllaiss/fest v0.7.0
 )
 
 tool github.com/a-h/templ/cmd/templ

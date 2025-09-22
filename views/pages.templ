@@ -53,11 +53,31 @@ templ NotFound() {
 templ About() {
 	@SingleNoH2(fest.GetTitle(ctx)) {
 		<main class="main-container">
-			<h2>About</h2>
-			<div class="main-single-child">
-				<p>This site is for personal use of Zill_Laiss</p>
+			<div class="about">
+				<h2>About this site</h2>
+				<img
+					src="/assets/icons/D37V_S.png"
+					alt="Zill_Laiss' avatar"
+					title="Zill_Laiss' avatar"
+					style={ "width: 10rem", "height: 10rem" }
+				/>
+				<p>This site is for personal use of Zill_Laiss.</p>
+				<div>
+					<p>You can also find me on these platforms:</p>
+					<div class="asknrjs">
+						@findMeOn()
+					</div>
+				</div>
 			</div>
 		</main>
+		<style>
+            .asknrjs {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+        </style>
 	}
 }
 
@@ -104,8 +124,10 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 		}
 		return int(t1.Sub(t2)) * -1
 	})
+	if sortErr != nil {
+		return sortErr
+	}
 	}}
-	{ wrapErr("", sortErr) }
 	@SingleNoH2(tag) {
 		<main class="main-container">
 			<h2>{ tag }</h2>
@@ -115,7 +137,7 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 					for _, p := range posts {
 						{{ fm := &types.Frontmatter{} }}
 						if err := p.GetFrontmatter(fm); err != nil {
-							{ wrapErr("", err) }
+							{{ return err }}
 						}
 						<li><a href={ surl("/posts/%v", p.Slug) }>{ fm.Title }</a></li>
 					}
@@ -135,7 +157,7 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 						{{ url := surl("/posts/%v", post.Slug) }}
 						{{ fm := &types.Frontmatter{} }}
 						if err := post.GetFrontmatter(fm); err != nil {
-							{ wrapErr("", err) }
+							{{ return err }}
 						}
 						<div class="post">
 							<section class="post-date">
@@ -160,13 +182,9 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 									}
 									<p>{ fm.Preamble }</p>
 									if fm.Eyecatch != nil {
-										<img
-											src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
-											alt={ fm.Eyecatch.Alt }
-											title={ fm.Eyecatch.Hover }
-										/>
+										@eyecatch(fm)
 									}
-									<p class="readmore"><a href={ url }>...read post</a></p>
+									<p class="readmore"><a href={ url }>{ "...read post" }</a></p>
 								</section>
 							</section>
 						</div>
@@ -186,16 +204,7 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 					</ul>
 					<section class="icon">
 						<h3>Find me on:</h3>
-						<div class="icon-container">
-							<a href="https://github.com/zilllaiss/">
-								<img class="icon-small" src="/assets/icons/github.svg" alt="github"/>
-								github.com/zilllaiss/ 
-							</a>
-						</div>
-						<div class="icon-container">
-							<img class="icon-small" src="/assets/icons/discord.svg" alt="discord"/>
-							<span>zill_laiss</span>
-						</div>
+						@findMeOn()
 					</section>
 				</aside>
 			</main>
@@ -215,11 +224,13 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 }
 
 templ Post(post *markdown.MarkdownData) {
-	{{ fm := &types.Frontmatter{} }}
+	{{
+	fm := &types.Frontmatter{}
 	if err := post.GetFrontmatter(fm); err != nil {
-		{ wrapErr("", err) }
+		return err
 	}
-	@SingleNoH2(fest.GetTitle(ctx)) {
+	}}
+	@SingleNoH2(fm.Title) {
 		<main class="main-pair">
 			<article class="post-field">
 				<section class="post-header">
@@ -240,13 +251,12 @@ templ Post(post *markdown.MarkdownData) {
 							}
 						</div>
 					}
-					<p style="margin-top: 30px">{ fm.Preamble }</p>
+					<div class="bsm">
+						<bdi>بسم الله</bdi>
+					</div>
+					<p>{ fm.Preamble }</p>
 					if fm.Eyecatch != nil {
-						<img
-							src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
-							alt={ fm.Eyecatch.Alt }
-							title={ fm.Eyecatch.Hover }
-						/>
+						@eyecatch(fm)
 					}
 				</section>
 				<section class="post-content">
@@ -261,7 +271,7 @@ templ Post(post *markdown.MarkdownData) {
 					x-bind:style="scrolled ? 'position: fixed; top: 80px' : '' "
 				>
 					<h2>Table of Content</h2>
-					<p style={"margin: 0", "margin-top: 0.3rem"}><a href="#">{ fm.Title }</a></p>
+					<p style={ "margin: 0", "margin-top: 0.3rem" }><a href="#">{ fm.Title }</a></p>
 					if len(post.TOC) > 0 {
 						@templ.Raw(post.TOC)
 					}
@@ -314,13 +324,30 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 			<p>{ fm.Preamble }</p>
 			if fm.Eyecatch != nil {
 				<div>
-					<img
-						src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
-						alt={ fm.Eyecatch.Alt }
-						title={ fm.Eyecatch.Hover }
-					/>
+					@eyecatch(fm)
 				</div>
 			}
 		</div>
 	</article>
+}
+
+templ eyecatch(fm *types.Frontmatter) {
+	<img
+		src={ fmt.Sprintf("/assets/images/%v", fm.Eyecatch.Filename) }
+		alt={ fm.Eyecatch.Alt }
+		title={ fm.Eyecatch.Hover }
+	/>
+}
+
+templ findMeOn() {
+	<div class="sieimee">
+		<a href="https://github.com/zilllaiss/">
+			<img class="icon-small" src="/assets/icons/github.svg" alt="github"/>
+			github.com/zilllaiss/ 
+		</a>
+	</div>
+	<div class="sieimee">
+		<img class="icon-small" src="/assets/icons/discord.svg" alt="discord"/>
+		<span>zill_laiss</span>
+	</div>
 }

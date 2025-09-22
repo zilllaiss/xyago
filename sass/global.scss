@@ -20,15 +20,9 @@ html {
     margin: var(--mainmargin);
     padding: var(--upperpadding);
 
-
-    &-child {
-      width: clamp(8rem, 80%, 59rem);
-    }
-
     &-center {
       @include app.divcenter;
       margin: auto;
-      // width: clamp(20rem, 80%, 50rem);
       width: clamp(40rem, 80%, 60rem);
       padding: 20px;
     }
@@ -42,6 +36,18 @@ html {
     display: flex;
     justify-content: center;
   }
+}
+
+.main-single-child {
+  width: clamp(8rem, 100%, 59rem);
+}
+
+.about {
+  width: clamp(8rem, 100%, 59rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .grid {
@@ -260,4 +266,9 @@ html {
 
 .post-date {
   color: #fff;
+}
+
+.sieimee {
+  margin-bottom: 0.5rem;
+  width: 12rem;
 }
