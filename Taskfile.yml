@@ -106,8 +106,8 @@ tasks:
       - git commit -m "{{.MSG}}"
       - task build PROD=true
       - | 
-        git add .
-        cd ../zilllaiss.github.io/
+        git add . &&
+        cd ../zilllaiss.github.io/ &&
         git commit -m "{{.MSG}}"
 
 
