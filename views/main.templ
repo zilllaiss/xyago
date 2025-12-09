@@ -20,5 +20,6 @@ templ SingleNoH2(title string) {
 templ Error(err error) {
 	@Base("An error happened!") {
 		<p>{ err.Error() }</p>
+        <p>hello</p>
 	}
 }
