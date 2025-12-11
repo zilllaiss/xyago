@@ -26,7 +26,10 @@ tasks:
       - task: gen
       - go build -o bin/xyago 
       - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST={{.ROOT_DIR}}/dist ./bin/xyago
-      - npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
+      - |
+        if [ '{{.PROD}}' == 'true' ] || [ '{{.PRETTY}}' == 'true' ]; then
+          npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
+        fi
       - | 
         if [ '{{.PROD}}' == 'true' ]; then 
           rsync --archive --delete --exclude=.git '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'

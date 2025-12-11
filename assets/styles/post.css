@@ -1,16 +1,16 @@
 @charset "UTF-8";
 
 .post {
-    margin-top: 20px;
-    margin-bottom: 49px;
-    max-width: 762px;
+    margin-top: 1.25rem;
+    margin-bottom: 3rem;
+    max-width: 47.6rem;
 }
 
 .post-info {
     flex: 1;
     top: 0;
     width: 17vh;
-    margin-left: 12px;
+    margin-left: 0.75rem;
     height: auto;
 }
 
@@ -18,11 +18,11 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 750px;
-}
+    width: 46.75rem;
 
-.post-field h2 {
-    justify-content: left;
+    h2 {
+        justify-content: left;
+    }
 }
 
 .post-title {
@@ -35,112 +35,114 @@
     text-transform: none;
     text-align: left;
     margin-left: 0;
+
+    a:hover {
+        color: rgb(80.5, 107.4362416107, 255);
+
+    }
 }
 
-.post-title a:hover {
-    color: rgb(80.5, 107.4362416107, 255);
-}
 
 .post-date,
 .post-idlepreview {
     color: var(--txgray);
     font-size: 0.8rem;
-    margin-bottom: 10px;
+    margin-bottom: 0.6rem;
 }
 
 .post-container {
     border-left: 2px solid var(--color-border);
-    padding-left: 15px;
+    padding-left: 1rem;
     margin-left: 0;
     line-height: 1.5rem;
 }
 
 .post-header {
-    margin: 20px;
+    margin: 1.25rem;
     padding-right: var(--contentmarginright);
-    padding-left: 20px;
+    padding-left: 1.25rem;
     max-width: calc(var(--outerwidth) - var(--bar-width));
-}
 
-.post-header img {
-    width: 100%;
-    height: auto;
-    max-width: calc(var(--outerwidth) - var(--bar-width) - 100px);
-    max-height: auto;
-    margin-top: 14px;
-    display: block;
-    margin: auto;
+    img {
+        width: 100%;
+        height: auto;
+        max-width: calc(var(--outerwidth) - var(--bar-width) - 6.25rem);
+        max-height: auto;
+        margin-top: 0.875rem;
+        display: block;
+        margin: auto;
+    }
 }
 
 .post-content {
-    margin: 0 20px 20px;
+    margin: 0 1.25rem 1.25rem;
     padding-right: var(--contentmarginright);
-    padding-left: 20px;
+    padding-left: 1.25rem;
     max-width: calc(var(--outerwidth) - var(--bar-width));
-}
 
-.post-content p {
-    margin-top: 19px;
-    margin-bottom: 17px;
-    line-height: 1.7rem;
-}
+    p {
+        margin-top: 1.2rem;
+        margin-bottom: 1rem;
+        line-height: 1.7rem;
+    }
 
-.post-content a {
-    color: var(--link-blue);
-}
+    a {
+        color: var(--link-blue);
+    }
 
-.post-content h1 {
-    text-align: inherit;
-    margin: 0;
-    font-size: 1.6rem;
-}
+    h1 {
+        text-align: inherit;
+        margin: 0;
+        font-size: 1.6rem;
+    }
 
-.post-content h2 {
-    font-size: 1.5rem;
-    text-transform: none;
-}
+    h2 {
+        font-size: 1.5rem;
+        text-transform: none;
+    }
 
-.post-content h3 {
-    font-size: 1.3rem;
-}
+    h3 {
+        font-size: 1.3rem;
+    }
 
-.post-content h3::before {
-    content: "ー";
-}
+    h3::before {
+        content: "ー";
+    }
 
-.post-content blockquote {
-    border-left: 5px solid var(--title-blue);
-    padding-left: 15px;
-    margin-left: 0;
-    background-color: #000;
-    padding-block: 0.1rem;
-    color: #8dadbf;
-    font-style: italic;
-    margin-right: 0;
-    padding-right: 1rem;
-}
+    blockquote {
+        border-left: 0.25rem solid var(--title-blue);
+        padding-left: 1rem;
+        margin-left: 0;
+        background-color: #000;
+        padding-block: 0.1rem;
+        color: #8dadbf;
+        font-style: italic;
+        margin-right: 0;
+        padding-right: 1rem;
+    }
 
-.post-content pre {
-    background-color: #000;
-    border: 2px solid var(--bgbottomblack);
-    color: var(--txwhite);
-    display: flex;
-    padding: 16px;
-}
+    pre {
+        background-color: #000;
+        border: 2px solid var(--bgbottomblack);
+        color: var(--txwhite);
+        display: flex;
+        padding: 1rem;
+    }
 
-.post-content img {
-    max-width: 90%;
-    display: block;
-    margin: auto;
-    margin-bottom: 1rem;
+    img {
+        max-width: 90%;
+        display: block;
+        margin: auto;
+        margin-bottom: 1rem;
+    }
 }
 
 .tag {
-    margin-right: 10px;
+    margin-right: 0.6rem;
     background: #3e3e3e;
-    padding: 0px 9px 3px;
-    border-radius: 3px;
-    font-size: 13px;
+    padding: 0 0.6rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
     letter-spacing: 0.4px;
     font-weight: 600;
 }
@@ -172,6 +174,25 @@
 
     .post-content {
         margin: var(--default-mobile);
+    }
+}
+
+.toc {
+    position: absolute;
+    top: 10rem;
+    padding: 0.6rem 1.4rem;
+
+    h2 {
+        font-size: 1rem;
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+
+    ul {
+        margin-top: 0;
+        list-style: none;
+        padding-left: 1.25rem;
+        font-size: 0.9rem;
     }
 }
 
