@@ -1,13 +1,11 @@
 version: '3'
 
-
 vars:
   JSLIB_PATH: assets/js/lib
   TEMPL_VER: 'v0.3.920'
   ALPINEJS_VER: '3.13.7'
 
   PROD_DEST: '{{.ROOT_DIR}}/../zilllaiss.github.io'
-  DEV_DEST: '{{.ROOT_DIR}}/dist'
   PROD: 'false'
 
 tasks:
@@ -24,15 +22,18 @@ tasks:
     desc: build the project
     aliases:
       - b
-    vars:
-      DEST: '{{if eq .PROD "true"}}{{.PROD_DEST}}{{else}}{{.DEV_DEST}}{{end}}'
     cmds:
-      - rm -rf {{.DEST}}/*
       - task: gen
-      - sleep 1
       - go build -o bin/xyago 
-      - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST="{{.DEST}}" ./bin/xyago
-      - prettier --write "{{.DEST}}/**/**.html"
+      - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST={{.ROOT_DIR}}/dist ./bin/xyago
+      - |
+        if [ '{{.PROD}}' == 'true' ] || [ '{{.PRETTY}}' == 'true' ]; then
+          npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
+        fi
+      - | 
+        if [ '{{.PROD}}' == 'true' ]; then 
+          rsync --archive --delete --exclude=.git '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
+        fi
 
   new:
     desc: initialize a new post
@@ -68,7 +69,6 @@ tasks:
 
   run:
     cmds:
-      - task: build:watch
       - ./bin/xyago
 
   init:
@@ -77,38 +77,30 @@ tasks:
     cmds:
       - task: deps:alpinejs
       - task: deps:templ
+      - npm i
       - go mod tidy
 
-  format:
-    cmds:
-     - prettier --write "{{.DEST_LOC}}/**/**.html"
-
   dev:
-    watch: true
     cmds:
-      - task: gen
-      - sleep 1
-      - task: run
+      - |
+        air &
+        npx live-server --port=8080 dist
+
+  live:
+    cmd: npx live-server --port=8080 '{{.ROOT_DIR}}/dist'
 
   generate:
     aliases:
       - gen
     cmds:
       - task: gen:templ
-      - task: gen:css
 
-  commit:
-    requires:
-      vars:
-        - MSG
+  git:
     cmds:
-      - git add .
-      - git commit -m "{{.MSG}}"
-      - task build PROD=true
+      - git {{.CLI_ARGS}}
       - | 
-        git add . &&
         cd ../zilllaiss.github.io/ &&
-        git commit -m "{{.MSG}}"
+        git {{.CLI_ARGS}}
 
 
 ##### INTERNAL ######
@@ -132,7 +124,7 @@ tasks:
       - '[[ $(templ version) == {{.TEMPL_VER}} ]]'
     cmds:
       - echo "installing templ..."
-      - go get -tool github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}} 
+      - GOBIN="{{.ROOT_DIR}}/bin" go install github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}} 
       - go get github.com/a-h/templ@{{.TEMPL_VER}}
 
   generate:templ:
@@ -143,14 +135,5 @@ tasks:
     generates:
       - views/*_templ.go
     cmds:
-      - go tool templ generate
+      - ./bin/templ generate
 
-  generate:css:
-    aliases:
-      - gen:css
-    sources:
-      - sass/*
-    generates:
-      - assets/styles/*
-    cmds:
-      - sass sass:assets/styles --update

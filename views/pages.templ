@@ -12,17 +12,17 @@ import (
 
 templ Index(mds []*markdown.MarkdownData) {
 	{{
-	title := fest.GetTitle(ctx)
-	if len(mds) > 3 {
-		mds = mds[:3]
-	}
+		title := fest.GetTitle(ctx)
+		if len(mds) > 3 {
+			mds = mds[:3]
+		}
 	}}
 	@Base(title) {
 		@Nav()
-		<img class="icon-main" src="/assets/icons/XYAS_fullcircle.svg" alt="xyassraist logo"/>
+		<img class="diyfsd" src="/assets/icons/XYAS_fullcircle.svg" alt="xyassraist logo"/>
 		<main class="main-single-center">
 			<h2><a href="/blog/1">Recent Posts</a></h2>
-			<div class="grid-main">
+			<div class="btrueir">
 				for i, v := range mds {
 					@homePost(i, v, mds)
 				}
@@ -53,7 +53,7 @@ templ NotFound() {
 templ About() {
 	@SingleNoH2(fest.GetTitle(ctx)) {
 		<main class="main-container">
-			<div class="about">
+			<div class="iafrtsf">
 				<h2>About this site</h2>
 				<img
 					src="/assets/icons/D37V_S.png"
@@ -98,41 +98,41 @@ templ Tags(tags []string) {
 
 templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 	{{
-	tag := fest.GetTitle(ctx)
-	posts := tagsMap[tag]
+		tag := fest.GetTitle(ctx)
+		posts := tagsMap[tag]
 
-	var sortErr error
+		var sortErr error
 
-	slices.SortStableFunc(posts, func(a, b *markdown.MarkdownData) int {
-		aFm := &types.Frontmatter{}
-		bFm := &types.Frontmatter{}
+		slices.SortStableFunc(posts, func(a, b *markdown.MarkdownData) int {
+			aFm := &types.Frontmatter{}
+			bFm := &types.Frontmatter{}
 
-		err1 := a.GetFrontmatter(aFm)
-		err2 := b.GetFrontmatter(bFm)
+			err1 := a.GetFrontmatter(aFm)
+			err2 := b.GetFrontmatter(bFm)
 
-		if err := cmp.Or(err1, err2); err != nil {
-			sortErr = err
-			return 0
+			if err := cmp.Or(err1, err2); err != nil {
+				sortErr = err
+				return 0
+			}
+
+			t1, err1 := time.Parse(time.DateOnly, aFm.PublishedAt)
+			t2, err2 := time.Parse(time.DateOnly, bFm.PublishedAt)
+
+			if err := cmp.Or(err1, err2); err != nil {
+				sortErr = err
+				return 0
+			}
+			return int(t1.Sub(t2)) * -1
+		})
+		if sortErr != nil {
+			return sortErr
 		}
-
-		t1, err1 := time.Parse(time.DateOnly, aFm.PublishedAt)
-		t2, err2 := time.Parse(time.DateOnly, bFm.PublishedAt)
-
-		if err := cmp.Or(err1, err2); err != nil {
-			sortErr = err
-			return 0
-		}
-		return int(t1.Sub(t2)) * -1
-	})
-	if sortErr != nil {
-		return sortErr
-	}
 	}}
 	@SingleNoH2(tag) {
 		<main class="main-container">
 			<h2>{ tag }</h2>
 			<article class="main-single-child">
-				<p>page tagged with { tag }</p>
+				<p>Post tagged with { tag }</p>
 				<ul>
 					for _, p := range posts {
 						{{ fm := &types.Frontmatter{} }}
@@ -147,7 +147,11 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 	}
 }
 
-templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, page fest.Pagination[*markdown.MarkdownData]) {
+templ Blog(
+	uniqueTags map[string][]*markdown.MarkdownData,
+	tagsSorted []string,
+	page fest.Pagination[*markdown.MarkdownData],
+) {
 	@SingleNoH2("Blog") {
 		<div class="main-container">
 			<h2>Blog</h2>
@@ -184,7 +188,7 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 									if fm.Eyecatch != nil {
 										@eyecatch(fm)
 									}
-									<p class="readmore"><a href={ url }>{ "...read post" }</a></p>
+									<p class="aokrtwa"><a href={ url }>{ "...read post" }</a></p>
 								</section>
 							</section>
 						</div>
@@ -192,7 +196,7 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 				</article>
 				<aside class="bar-right">
 					<h3>Tags</h3>
-					<ul class="section-tag">
+					<ul class="aorgnfk">
 						for _, t := range tagsSorted {
 							{{ tagPosts := uniqueTags[t] }}
 							<li>
@@ -225,10 +229,10 @@ templ Blog(uniqueTags map[string][]*markdown.MarkdownData, tagsSorted []string, 
 
 templ Post(post *markdown.MarkdownData) {
 	{{
-	fm := &types.Frontmatter{}
-	if err := post.GetFrontmatter(fm); err != nil {
-		return err
-	}
+		fm := &types.Frontmatter{}
+		if err := post.GetFrontmatter(fm); err != nil {
+			return err
+		}
 	}}
 	@SingleNoH2(fm.Title) {
 		<main class="main-pair">
@@ -289,20 +293,20 @@ templ Post(post *markdown.MarkdownData) {
 
 templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 	{{
-	className := "grid-first"
-	style := ""
+		className := "cnrtiep"
+		style := ""
 
-	fm := &types.Frontmatter{}
-	err := v.GetFrontmatter(fm)
+		fm := &types.Frontmatter{}
+		err := v.GetFrontmatter(fm)
 
-	if i != 0 {
-		className = "grid-item"
-	}
+		if i != 0 {
+			className = "tpagrit"
+		}
 
-	if len(mds) == 2 && i == 1 {
-		style = "grid-column-start: 1; grid-column-end: 3"
-	}
-	url := surl("/posts/%v", v.Slug)
+		if len(mds) == 2 && i == 1 {
+			style = "grid-column-start: 1; grid-column-end: 3"
+		}
+		url := surl("/posts/%v", v.Slug)
 	}}
 	<article class={ className } style={ style }>
 		<div class="post-header">

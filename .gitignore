@@ -2,6 +2,6 @@
 .task
 *_templ.go
 **/lib/*
-assets/styles
 dist
 main
+node_modules
