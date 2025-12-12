@@ -32,7 +32,7 @@ tasks:
         fi
       - | 
         if [ '{{.PROD}}' == 'true' ]; then 
-          rsync --archive --delete --exclude=.git '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
+          rsync --archive --delete --exclude=.git -v '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
         fi
 
   new:
