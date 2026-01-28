@@ -87,7 +87,9 @@ tasks:
         npx live-server --port=8080 dist
 
   live:
-    cmd: npx live-server --port=8080 '{{.ROOT_DIR}}/dist'
+    desc: launch live-server
+    cmds: 
+      - npx live-server --port=8080 '{{.ROOT_DIR}}/dist'
 
   generate:
     aliases:

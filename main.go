@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	figure "github.com/mangoumbrella/goldmark-figure"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/zilllaiss/fest/markdown"
@@ -11,7 +12,10 @@ import (
 func main() {
 	var err error
 
-	m := markdown.NewMarkdown(goldmark.WithRendererOptions(html.WithUnsafe()))
+	m := markdown.NewMarkdown(
+		goldmark.WithRendererOptions(html.WithUnsafe()),
+		goldmark.WithExtensions(figure.Figure),
+	)
 	wmp := &WrappedMarkdownParser{mp: m}
 
 	posts, err = wmp.ParseFiles("posts")

@@ -75,19 +75,24 @@
 }
 
 .post-content {
+    --lh: 1.7rem;
+
     margin: 0 1.25rem 1.25rem;
     padding-right: var(--contentmarginright);
     padding-left: 1.25rem;
     max-width: calc(var(--outerwidth) - var(--bar-width));
 
     p {
-        margin-top: 1.2rem;
-        margin-bottom: 1rem;
-        line-height: 1.7rem;
+        margin-block: 1rem;
+        line-height: var(--lh);
     }
 
     a {
         color: var(--link-blue);
+    }
+
+    li {
+        line-height: var(--lh);
     }
 
     h1 {
@@ -134,6 +139,12 @@
         display: block;
         margin: auto;
         margin-bottom: 1rem;
+    }
+
+    figcaption {
+        text-align: center;
+        font-style: italic;
+        font-size: 0.9rem;
     }
 }
 
