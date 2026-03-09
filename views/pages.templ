@@ -3,8 +3,8 @@ package views
 import (
 	"cmp"
 	"fmt"
-	"github.com/zilllaiss/fest"
-	"github.com/zilllaiss/fest/markdown"
+	"codeberg.org/zill_laiss/fest"
+	"codeberg.org/zill_laiss/fest/markdown"
 	"slices"
 	"time"
 	"xyago/types"
@@ -12,16 +12,15 @@ import (
 
 templ Index(mds []*markdown.MarkdownData) {
 	{{
-		title := fest.GetTitle(ctx)
 		if len(mds) > 3 {
 			mds = mds[:3]
 		}
 	}}
-	@Base(title) {
+	@Base() {
 		@Nav()
 		<img class="diyfsd" src="/assets/icons/XYAS_fullcircle.svg" alt="xyassraist logo"/>
 		<main class="main-single-center">
-			<h2><a href="/blog/1">Recent Posts</a></h2>
+			<h2 class="ytueogr"><a href="/blog/1">Recent Posts</a></h2>
 			<div class="btrueir">
 				for i, v := range mds {
 					@homePost(i, v, mds)
@@ -32,7 +31,7 @@ templ Index(mds []*markdown.MarkdownData) {
 }
 
 templ NotFound() {
-	@SingleNoH2("404") {
+	@SingleNoH2() {
 		<main class="main-single-center">
 			<h2>404</h2>
 			<p>It looks like you are lost!</p>
@@ -51,7 +50,7 @@ templ NotFound() {
 }
 
 templ About() {
-	@SingleNoH2(fest.GetTitle(ctx)) {
+	@SingleNoH2() {
 		<main class="main-container">
 			<div class="iafrtsf">
 				<h2>About this site</h2>
@@ -82,9 +81,9 @@ templ About() {
 }
 
 templ Tags(tags []string) {
-	@SingleNoH2(fest.GetTitle(ctx)) {
+	@SingleNoH2() {
 		<main class="main-container">
-			<h2>Tags</h2>
+			<h2 class="">Tags</h2>
 			<div class="main-single-child">
 				<ul>
 					for _, t := range tags {
@@ -96,9 +95,8 @@ templ Tags(tags []string) {
 	}
 }
 
-templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
+templ Tag(tag string, tagsMap map[string][]*markdown.MarkdownData) {
 	{{
-		tag := fest.GetTitle(ctx)
 		posts := tagsMap[tag]
 
 		var sortErr error
@@ -128,7 +126,7 @@ templ Tag(tagsMap map[string][]*markdown.MarkdownData) {
 			return sortErr
 		}
 	}}
-	@SingleNoH2(tag) {
+	@SingleNoH2() {
 		<main class="main-container">
 			<h2>{ tag }</h2>
 			<article class="main-single-child">
@@ -152,7 +150,7 @@ templ Blog(
 	tagsSorted []string,
 	page fest.Pagination[*markdown.MarkdownData],
 ) {
-	@SingleNoH2("Blog") {
+	@SingleNoH2() {
 		<div class="main-container">
 			<h2>Blog</h2>
 			<main class="main-pair">
@@ -194,8 +192,8 @@ templ Blog(
 						</div>
 					}
 				</article>
-				<aside class="bar-right">
-					<h3>Tags</h3>
+				<aside class="bar-right bg-gray-l border border-color">
+					<h3 class="hrugnrs">Tags</h3>
 					<ul class="aorgnfk">
 						for _, t := range tagsSorted {
 							{{ tagPosts := uniqueTags[t] }}
@@ -234,7 +232,7 @@ templ Post(post *markdown.MarkdownData) {
 			return err
 		}
 	}}
-	@SingleNoH2(fm.Title) {
+	@SingleNoH2() {
 		<main class="main-pair">
 			<article class="post-field">
 				<section class="post-header">
@@ -269,12 +267,12 @@ templ Post(post *markdown.MarkdownData) {
 			</article>
 			<aside class="bar-right">
 				<div
-					class="toc"
+					class="toc bg-gray-l border border-color"
 					x-data="{ scrolled: false }"
 					@scroll.window="scrolled = window.scrollY >= 80"
 					x-bind:style="scrolled ? 'position: fixed; top: 80px' : '' "
 				>
-					<h2>Table of Content</h2>
+					<h2 class="hferiae">Table of Content</h2>
 					<p style={ "margin: 0", "margin-top: 0.3rem" }><a href="#">{ fm.Title }</a></p>
 					if len(post.TOC) > 0 {
 						@templ.Raw(post.TOC)
@@ -308,7 +306,7 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 		}
 		url := surl("/posts/%v", v.Slug)
 	}}
-	<article class={ className } style={ style }>
+	<article class={ className, "bg-gray-l" } style={ style }>
 		<div class="post-header">
 			<h3 class="post-title"><a href={ url }>{ fm.Title, err }</a></h3>
 			<div class="post-date">

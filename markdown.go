@@ -7,7 +7,7 @@ import (
 	"time"
 	"xyago/types"
 
-	"github.com/zilllaiss/fest/markdown"
+	"codeberg.org/zill_laiss/fest/markdown"
 )
 
 var (

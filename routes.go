@@ -6,9 +6,9 @@ import (
 	"xyago/types"
 	"xyago/views"
 
-	"github.com/zilllaiss/fest"
-	"github.com/zilllaiss/fest/markdown"
-	"github.com/zilllaiss/fest/temfest"
+	"codeberg.org/zill_laiss/fest"
+	"codeberg.org/zill_laiss/fest/markdown"
+	"codeberg.org/zill_laiss/fest/temfest"
 
 	"github.com/a-h/templ"
 )
@@ -16,36 +16,43 @@ import (
 const postStyling = "/assets/styles/post.css"
 
 func generator() *fest.Generator {
-	g := fest.NewGenerator(context.Background(), "Zill_Laiss' blog", &fest.GeneratorConfig{
-		BaseConfig: temfest.BaseConfig{Lang: "en"},
-	})
+	siteName := "Zill_Laiss' blog"
+	suffix := " - " + siteName
+
+	g := fest.NewGenerator(context.Background(), siteName, nil)
+	g.SetLanguage("en")
 
 	g.CopyDir("assets", "")
 	g.CopyFile("favicon.png", "")
 	g.CopyFile("misc/README.md", "")
 
-	g.HeadBody.Head(
+	g.AppendToHead(
 		temfest.ImportStyle("/assets/styles/global.css"),
 		temfest.ImportIcon("/favicon.png", "image/png"),
 	)
 
-	g.AddRouteFunc("/", index).HeadBody.Head(temfest.ImportStyle(postStyling))
-	g.AddRoute("/404.html", views.NotFound())
-	g.AddRoute("/about", views.About()).SetTitle("About")
-	g.AddRoute("/tags", views.Tags(tagsSorted)).SetTitle("Tags")
+	g.AddRouteFunc("/", index).
+		SetTitle(siteName).
+		AppendToHead(temfest.ImportStyle(postStyling))
 
-	tagRoutes := fest.NewRoutes("/tags/{s}", tagsSorted)
-	tagRoutes.HeadBody.Head(temfest.ImportStyle(postStyling))
-	tagRoutes.AddToGenerator(g, tagsFn)
+	g.AddRoute("/404.html", views.NotFound()).SetTitle("Not found")
+	g.AddRoute("/about", views.About()).SetTitle("About" + suffix)
+	g.AddRoute("/tags", views.Tags(tagsSorted)).SetTitle("Tags" + suffix)
 
-	postRoutes := fest.NewRoutesT("/posts/{s}", posts)
-	postRoutes.HeadBody.Head(temfest.ImportStyle(postStyling))
-	postRoutes.AddToGenerator(g, postsFn)
+	fest.NewRoutes("/tags/{s}", tagsSorted).
+		SetTitle("{s}"+suffix).
+		AppendToHead(temfest.ImportStyle(postStyling)).
+		AddToGenerator(g, tagsFn)
 
-	blogPages := fest.NewPaginatedRoutes("/blog/{s}", posts, 5).
-		SetTitle("Blogs - page {s}")
-	blogPages.HeadBody.Head(temfest.ImportStyle(postStyling))
-	blogPages.AddToGenerator(g, blogs)
+	fest.NewRoutesT("/posts/{s}", posts).
+		SetTitle("{s}"+suffix).
+		AppendToHead(temfest.ImportStyle(postStyling)).
+		AddToGenerator(g, postsFn)
+
+	fest.NewPaginatedRoutes("/blog/{s}", posts, 5).
+		SetTitle("Blogs - page {s}"+suffix).
+		AppendToHead(temfest.ImportStyle(postStyling)).
+		AddToGenerator(g, blogs)
 
 	return g
 }
@@ -59,7 +66,8 @@ func blogs(ctx context.Context,
 }
 
 func tagsFn(ctx context.Context, rp *fest.RouteParam[string]) (templ.Component, error) {
-	return views.Tag(tagsMap), nil
+	tag := rp.GetItem()
+	return views.Tag(tag, tagsMap), nil
 }
 
 func postsFn(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {

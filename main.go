@@ -6,7 +6,7 @@ import (
 	figure "github.com/mangoumbrella/goldmark-figure"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/renderer/html"
-	"github.com/zilllaiss/fest/markdown"
+	"codeberg.org/zill_laiss/fest/markdown"
 )
 
 func main() {

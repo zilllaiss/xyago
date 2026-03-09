@@ -2,7 +2,7 @@
 title: Rewritten in Go
 public: true
 published: 2025-07-23
-updated: 2025-08-20
+updated: 2026-03-09
 preamble: | 
     More than a year ago, I was relly excited to build this site with Astro, a popular static site generator.
     However, that excitement ended up to not last very long.
@@ -15,7 +15,9 @@ tags:
   - templ
 ---
 
-This site is now written with [FEST](https://github.com/zilllaiss/FEST), a minimalistic static-site generator I made.
+> Updated the FEST link after the migration to Codeberg
+
+This site is now written with [FEST](https://codeberg.org/zill_laiss/fest), a minimalistic static-site generator I made.
 I want to say that it is _ported_ since the new source code for is one-to-one with original code written in Astro-js in most area, but there are some big changes. 
 
 Most of the change is in the routing. Astro follow a folder-based routing. That means you make a folder with route name yous wish, and in that folder you made a `index.html`. Most of JS frameworks have similar features for routing.

@@ -191,7 +191,12 @@
 .toc {
     position: absolute;
     top: 10rem;
-    padding: 0.6rem 1.4rem;
+    padding: 0.6rem 2rem;
+    border-radius: var(--border-radius);
+
+    a {
+        color: var(--color-fade);
+    }
 
     h2 {
         font-size: 1rem;
@@ -211,4 +216,10 @@
     text-align: center;
     font-size: 1.5rem;
     margin-top: 1rem;
+}
+
+/* Classes */
+
+.hferiae {
+    font-weight: bold !important;
 }

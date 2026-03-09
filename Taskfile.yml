@@ -17,6 +17,8 @@ tasks:
       - task: deps
       - task: gen
       - task: build
+        vars:
+          SKIP_GEN: 'true'
 
   build:
     desc: build the project
@@ -24,6 +26,8 @@ tasks:
       - b
     cmds:
       - task: gen
+        vars:
+          SKIP_GEN: '{{.SKIP_GEN}}'
       - go build -o bin/xyago 
       - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST={{.ROOT_DIR}}/dist ./bin/xyago
       - |
@@ -92,6 +96,7 @@ tasks:
       - npx live-server --port=8080 '{{.ROOT_DIR}}/dist'
 
   generate:
+    if: 'test "{{.SKIP_GEN}}" != "true"'
     aliases:
       - gen
     cmds:

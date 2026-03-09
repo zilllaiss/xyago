@@ -1,11 +1,11 @@
 package views 
 
 import (
-	"time"
 	"fmt"
+	"time"
 )
 
-templ Base(title string) {
+templ Base() {
 	{{ year := time.Now().Year() }}
 	{ children... }
 	<footer>
@@ -24,6 +24,6 @@ templ Nav() {
 	</nav>
 }
 
-func surl(format string, a... any) templ.SafeURL { 
-    return templ.SafeURL(fmt.Sprintf(format, a...))
+func surl(format string, a ...any) templ.SafeURL {
+	return templ.SafeURL(fmt.Sprintf(format, a...))
 }
