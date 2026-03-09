@@ -45,9 +45,8 @@ func generator() *fest.Generator {
 		AddToGenerator(g, tagsFn)
 
 	fest.NewRoutesT("/posts/{s}", posts).
-		SetTitle("{s}"+suffix).
 		AppendToHead(temfest.ImportStyle(postStyling)).
-		AddToGenerator(g, postsFn)
+		AddToGenerator(g, postsFn(suffix))
 
 	fest.NewPaginatedRoutes("/blog/{s}", posts, 5).
 		SetTitle("Blogs - page {s}"+suffix).
@@ -70,16 +69,18 @@ func tagsFn(ctx context.Context, rp *fest.RouteParam[string]) (templ.Component, 
 	return views.Tag(tag, tagsMap), nil
 }
 
-func postsFn(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
-	post := rp.GetItem()
-	fm := &types.Frontmatter{}
+func postsFn(suffix string) func(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
+	return func(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
+		post := rp.GetItem()
+		fm := &types.Frontmatter{}
 
-	if err := post.GetFrontmatter(fm); err != nil {
-		return nil, err
+		if err := post.GetFrontmatter(fm); err != nil {
+			return nil, err
+		}
+
+		rp.SetSlug(post.Slug)
+		rp.SetTitle(fm.Title + suffix)
+
+		return views.Post(post), nil
 	}
-
-	rp.SetSlug(post.Slug)
-	rp.SetTitle(fm.Title)
-
-	return views.Post(post), nil
 }

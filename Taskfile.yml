@@ -2,7 +2,7 @@ version: '3'
 
 vars:
   JSLIB_PATH: assets/js/lib
-  TEMPL_VER: 'v0.3.920'
+  TEMPL_VER: 'v0.3.1001'
   ALPINEJS_VER: '3.13.7'
 
   PROD_DEST: '{{.ROOT_DIR}}/../zilllaiss.github.io'
