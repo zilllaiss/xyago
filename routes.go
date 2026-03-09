@@ -36,8 +36,10 @@ func generator() *fest.Generator {
 		AppendToHead(temfest.ImportStyle(postStyling))
 
 	g.AddRoute("/404.html", views.NotFound()).SetTitle("Not found")
-	g.AddRoute("/about", views.About()).SetTitle("About" + suffix)
 	g.AddRoute("/tags", views.Tags(tagsSorted)).SetTitle("Tags" + suffix)
+	g.AddRoute("/about", views.About()). 
+		SetTitle("About" + suffix). 
+		AppendToHead(temfest.ImportStyle("/assets/styles/about.css"))
 
 	fest.NewRoutes("/tags/{s}", tagsSorted).
 		SetTitle("{s}"+suffix).

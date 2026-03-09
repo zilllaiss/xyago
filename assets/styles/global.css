@@ -202,6 +202,10 @@ html {
     border-color: var(--color-border);
 }
 
+.text-center {
+    text-align: center;
+}
+
 /* CLASSES */
 
 .hrugnrs {
@@ -214,7 +218,6 @@ html {
 }
 
 .iafrtsf {
-    width: clamp(8rem, 100%, 59rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -276,6 +279,16 @@ html {
 .sieimee {
     margin-bottom: 0.5rem;
     width: 12rem;
+}
+
+.easjfre {
+    ul {
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+    }
 }
 
 @media only screen and (max-width: 800px) {

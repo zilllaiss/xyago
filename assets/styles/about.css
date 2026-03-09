@@ -1,0 +1,15 @@
+.ufrtjre {
+    display: flex;
+    margin: 4rem auto;
+    padding: var(--upperpadding);
+    flex-direction: column;
+    width: clamp(8rem, 80%, 63rem);
+}
+
+.asknrjs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+

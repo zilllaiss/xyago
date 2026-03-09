@@ -51,7 +51,7 @@ templ NotFound() {
 
 templ About() {
 	@SingleNoH2() {
-		<main class="main-container">
+		<main class="ufrtjre">
 			<div class="iafrtsf">
 				<h2>About this site</h2>
 				<img
@@ -69,22 +69,14 @@ templ About() {
 				</div>
 			</div>
 		</main>
-		<style>
-            .asknrjs {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-            }
-        </style>
 	}
 }
 
 templ Tags(tags []string) {
 	@SingleNoH2() {
-		<main class="main-container">
+		<main class="main-container text-center">
 			<h2>Tags</h2>
-			<div class="main-single-child">
+			<div class="easjfre">
 				<ul>
 					for _, t := range tags {
 						<li><a href={ surl("/tags/%v", t) }>{ t }</a></li>
