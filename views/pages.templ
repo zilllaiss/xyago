@@ -307,7 +307,7 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 			</div>
 			if len(fm.Tags) > 0 {
 				{{ slices.Sort(fm.Tags) }}
-				<div>
+				<div class="tag-field">
 					for _, t := range fm.Tags {
 						<span class="tag">
 							<a href={ surl("/tags/%v", t) }>{ t }</a>
