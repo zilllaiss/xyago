@@ -28,8 +28,8 @@
 .post-title {
     color: var(--title-blue);
     font-size: 2.2rem;
-    margin-top: calc(var(--spacing)*6);
-    margin-bottom: calc(var(--spacing)*6);
+    margin-top: calc(var(--spacing)*5.6);
+    margin-bottom: calc(var(--spacing)*5.6);
     font-weight: 399;
     font-style: italic;
     text-transform: none;

@@ -281,6 +281,50 @@ templ Post(post *markdown.MarkdownData) {
 	}
 }
 
+templ Projects() {
+	@SingleNoH2() {
+		<article class="main-container">
+			<h2>Projects</h2>
+			<div class="p-bcbryer">
+				@project("Sites") {
+					<div>My personal site</div>
+					<div>The site you are on right now. Can contain anything, to be honest.</div>
+					<div><a href="https://filafaq.net/">Filafaq</a></div>
+					<div>Database regarding Islam from all the horizons.</div>
+				}
+				@project("Utilities") {
+					<div><a href="https://codeberg.org/zill_laiss/fest">FEST</a></div>
+					<div>
+						Short for "Fantastically Easy Static-site with Templ".
+                        As the name suggest, it's for generating static-site using 
+                        Templ (Go templating library).
+						This is what this site is generated with.
+					</div>
+					<div>
+						<a href="https://codeberg.org/zill_laiss/notabene">
+							Notabene
+						</a>
+					</div>
+					<div>Converts dictionary-like markdown files to PDF.</div>
+				}
+				@project("UI demos") {
+					<div><a href="/tut">TemplUI demo</a></div>
+					<div>Using <a href="https://templui.io/">Templui</a> library with Go.</div>
+				}
+			</div>
+		</article>
+	}
+}
+
+templ project(title string) {
+	<section>
+		<h3>{ title }</h3>
+		<div class="p-grid-table-pair">
+			{ children... }
+		</div>
+	</section>
+}
+
 templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 	{{
 		className := "cnrtiep"

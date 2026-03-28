@@ -1,0 +1,29 @@
+.main-container {
+    justify-content: center;
+    align-items: center;
+}
+
+.p-bcbryer {
+	display: flex;
+	width: auto;
+	max-width: 80%;
+	flex-direction: column;
+	flex-wrap: wrap;
+
+    a {
+        color: var(--link-blue);
+    }
+}
+
+.p-grid-table-pair {
+    grid-template-columns: clamp(4rem, 30%, 10rem) 1fr;
+    display: grid;
+    gap: 0.5rem 1rem;
+}
+
+
+@media only screen and (max-width: 800px) {
+    .p-bcbryer {
+        max-width: unset;
+    }
+}

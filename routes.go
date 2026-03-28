@@ -16,7 +16,7 @@ import (
 const postStyling = "/assets/styles/post.css"
 
 func generator() *fest.Generator {
-	siteName := "Zill_Laiss' blog"
+	siteName := "ZL"
 	suffix := " - " + siteName
 
 	g := fest.NewGenerator(context.Background(), siteName, nil)
@@ -36,9 +36,13 @@ func generator() *fest.Generator {
 		AppendToHead(temfest.ImportStyle(postStyling))
 
 	g.AddRoute("/404.html", views.NotFound()).SetTitle("Not found")
+	g.AddRoute("/projects", views.Projects()). 
+		SetTitle("Projects" + suffix).
+		AppendToHead(temfest.ImportStyle("/assets/styles/projects.css"))
+
 	g.AddRoute("/tags", views.Tags(tagsSorted)).SetTitle("Tags" + suffix)
-	g.AddRoute("/about", views.About()). 
-		SetTitle("About" + suffix). 
+	g.AddRoute("/about", views.About()).
+		SetTitle("About" + suffix).
 		AppendToHead(temfest.ImportStyle("/assets/styles/about.css"))
 
 	fest.NewRoutes("/tags/{s}", tagsSorted).
@@ -71,8 +75,14 @@ func tagsFn(ctx context.Context, rp *fest.RouteParam[string]) (templ.Component, 
 	return views.Tag(tag, tagsMap), nil
 }
 
-func postsFn(suffix string) func(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
-	return func(ctx context.Context, rp *fest.RouteParam[*markdown.MarkdownData]) (templ.Component, error) {
+func postsFn(suffix string) func(
+	ctx context.Context,
+	rp *fest.RouteParam[*markdown.MarkdownData],
+) (templ.Component, error) {
+	return func(
+		ctx context.Context,
+		rp *fest.RouteParam[*markdown.MarkdownData],
+	) (templ.Component, error) {
 		post := rp.GetItem()
 		fm := &types.Frontmatter{}
 

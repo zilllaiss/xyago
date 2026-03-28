@@ -1,12 +1,12 @@
-version: '3'
+version: "3"
 
 vars:
   JSLIB_PATH: assets/js/lib
-  TEMPL_VER: 'v0.3.1001'
-  ALPINEJS_VER: '3.13.7'
+  TEMPL_VER: "v0.3.1001"
+  ALPINEJS_VER: "3.13.7"
 
-  PROD_DEST: '{{.ROOT_DIR}}/../zilllaiss.github.io'
-  PROD: 'false'
+  PROD_DEST: "{{.ROOT_DIR}}/../zilllaiss.github.io"
+  PROD: "false"
 
 tasks:
   build:all:
@@ -14,11 +14,10 @@ tasks:
     aliases:
       - b-all
     cmds:
-      - task: deps
-      - task: gen
       - task: build
         vars:
-          SKIP_GEN: 'true'
+          SKIP_GEN: "true"
+      - task: build:tut
 
   build:
     desc: build the project
@@ -27,17 +26,31 @@ tasks:
     cmds:
       - task: gen
         vars:
-          SKIP_GEN: '{{.SKIP_GEN}}'
-      - go build -o bin/xyago 
+          SKIP_GEN: "{{.SKIP_GEN}}"
+      - go build -o bin/xyago
       - FEST_SRC="{{.ROOT_DIR}}" FEST_DEST={{.ROOT_DIR}}/dist ./bin/xyago
+      - task: sync
+
+  build:tut:
+    cmds:
       - |
-        if [ '{{.PROD}}' == 'true' ] || [ '{{.PRETTY}}' == 'true' ]; then
-          npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
-        fi
-      - | 
-        if [ '{{.PROD}}' == 'true' ]; then 
-          rsync --archive --delete --exclude=.git -v '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
-        fi
+        {{$distdir := (list .ROOT_DIR "dist/tut" | join "/")}}
+        {{$bindir := (list .ROOT_DIR "bin" | join "/")}}
+
+        mkdir -p "{{$distdir}}"
+        cd TUT
+        task gen BIN_DIR="{{$bindir}}"
+        task build BIN_DIR="{{$bindir}}"
+
+        DIST_PATH="{{$distdir}}" TUT_ASSETS_DIR="{{.ROOT_DIR}}/dist/assets" \
+          task dist BIN_DIR="{{$bindir}}"
+      - task: sync
+
+  sync:
+    if: '"{{.PROD}}" == "true"'
+    cmds:
+      - npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
+      - rsync --archive --delete --exclude=.git -v '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
 
   new:
     desc: initialize a new post
@@ -45,7 +58,7 @@ tasks:
       vars:
         - SLUG
     preconditions:
-      - sh: '! test -f ./posts/{{.SLUG}}.md'
+      - sh: "! test -f ./posts/{{.SLUG}}.md"
         msg: File already exists
     silent: true
     vars:
@@ -66,7 +79,7 @@ tasks:
         ---
 
         ## Draft
-                
+
     cmds:
       - echo "{{.TEMPLATE}}" > {{.FILEPATH}}
       - echo '{{.FILEPATH}} is succesfully created.'
@@ -74,6 +87,11 @@ tasks:
   run:
     cmds:
       - ./bin/xyago
+
+  init:all:
+    cmds:
+      - task: init
+      - task: init:tut
 
   init:
     aliases:
@@ -84,6 +102,12 @@ tasks:
       - npm i
       - go mod tidy
 
+  init:tut:
+    cmds:
+      - |
+        cd TUT
+        task init BIN_DIR='{{.ROOT_DIR}}/bin'
+
   dev:
     cmds:
       - |
@@ -92,7 +116,7 @@ tasks:
 
   live:
     desc: launch live-server
-    cmds: 
+    cmds:
       - npx live-server --port=8080 '{{.ROOT_DIR}}/dist'
 
   generate:
@@ -105,33 +129,30 @@ tasks:
   git:
     cmds:
       - git {{.CLI_ARGS}}
-      - | 
+      - |
         cd ../zilllaiss.github.io/ &&
         git {{.CLI_ARGS}}
 
-
-##### INTERNAL ######
-  
+  ##### INTERNAL ######
 
   deps:alpinejs:
     internal: true
     status:
       - test -f {{.JSLIB_PATH}}/alpine.js
-      - '[[ $(cat .task/alpinejs_ver) == {{.ALPINEJS_VER}} ]]'
+      - "[[ $(cat .task/alpinejs_ver) == {{.ALPINEJS_VER}} ]]"
     cmds:
       - mkdir -p .task
       - echo "intalling alpinejs..."
       - curl https://unpkg.com/alpinejs@{{.ALPINEJS_VER}}/dist/cdn.min.js -o {{.JSLIB_PATH}}/alpine.js
-      - 'echo {{.ALPINEJS_VER}} > .task/alpinejs_ver'
-  
+      - "echo {{.ALPINEJS_VER}} > .task/alpinejs_ver"
+
   deps:templ:
     internal: true
-    status: 
-      - go tool templ --version
-      - '[[ $(templ version) == {{.TEMPL_VER}} ]]'
+    status:
+      - test -f ./bin/templ && [[ $(./bin/templ version) == {{.TEMPL_VER}} ]]
     cmds:
       - echo "installing templ..."
-      - GOBIN="{{.ROOT_DIR}}/bin" go install github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}} 
+      - GOBIN="{{.ROOT_DIR}}/bin" go install github.com/a-h/templ/cmd/templ@{{.TEMPL_VER}}
       - go get github.com/a-h/templ@{{.TEMPL_VER}}
 
   generate:templ:
@@ -143,4 +164,3 @@ tasks:
       - views/*_templ.go
     cmds:
       - ./bin/templ generate
-

@@ -28,6 +28,7 @@ func main() {
 	}
 
 	g := generator()
+	
 
 	if err := g.Generate(); err != nil {
 		log.Fatalln(err)

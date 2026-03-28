@@ -16,6 +16,7 @@
     --cyan: #00ffe7;
     --color-border: #2d2828;
     --color-fade: hsl(0, 0%, 83.1%);
+    --color-blue-fade: #252550;
     --color-gray-light: hsl(0, 0%, 6.7%);
 
     --contentlinespacing: 1.5rem;
@@ -71,32 +72,32 @@ h2 {
     font-weight: 610;
 }
 
-nav ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: unset;
-    list-style-type: none;
-    padding: 0;
-    overflow: hidden;
-}
+nav {
+    ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: unset;
+        list-style-type: none;
+        padding: 0;
+        overflow: hidden;
 
-nav ul li {
-    float: left;
-}
+        li {
+            a {
+                display: block;
+                text-align: center;
+                padding-block: calc(var(--spacing)*3.5);
+                padding-inline: calc(var(--spacing)*4);
+                text-decoration: none;
+                font-size: calc(var(--spacing)*4.4);
 
-nav ul li a {
-    display: block;
-    text-align: center;
-    padding-block: calc(var(--spacing)*3.5);
-    padding-inline: calc(var(--spacing)*4);
-    text-decoration: none;
-    font-size: calc(var(--spacing)*4.4);
-}
-
-nav ul li a:hover {
-    background-color: #252550;
-    color: inherit;
+                &:hover {
+                    background-color: var(--color-blue-fade);
+                    color: inherit;
+                }
+            }
+        }
+    }
 }
 
 footer {
@@ -222,6 +223,25 @@ html {
 }
 
 /* CLASSES */
+
+.afirnyt {
+    height: calc(var(--spacing)*12);
+
+    ul {
+        display: flex;
+        height: 100%;
+    }
+
+    li {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--color-blue-fade);
+        }
+    }
+}
 
 .hrugnrs {
     line-height: calc(var(--spacing)*4);
