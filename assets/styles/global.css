@@ -40,6 +40,8 @@ body {
     background-attachment: fixed;
     color: var(--txwhite);
     width: 99%;
+    padding: 0;
+    margin: 0;
 }
 
 a {
@@ -55,7 +57,7 @@ h1,
 h2,
 h3,
 h4 {
-    line-height: 2rem;
+    line-height: calc(var(--spacing)*8);
 }
 
 h1 {
@@ -86,9 +88,10 @@ nav ul li {
 nav ul li a {
     display: block;
     text-align: center;
-    padding: 0.875rem 1rem;
+    padding-block: calc(var(--spacing)*3.5);
+    padding-inline: calc(var(--spacing)*4);
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: calc(var(--spacing)*4.4);
 }
 
 nav ul li a:hover {
@@ -101,7 +104,7 @@ footer {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 5rem;
+    margin-top: calc(var(--spacing)*20);
 }
 
 html {
@@ -132,10 +135,12 @@ html {
 
 .main-container {
     display: flex;
-    margin: 4rem auto;
-    padding: var(--upperpadding);
+    margin-block: calc(var(--spacing)*16);
+    margin-inline: auto;
+    padding-block: var(--upperpadding);
+    padding-inline: var(--upperpadding);
     flex-direction: column;
-    width: clamp(8rem, 80%, 63rem);
+    width: clamp(8rem, 90%, 63rem);
 }
 
 .main-pair {
@@ -150,7 +155,7 @@ html {
     flex-direction: column;
     margin: auto;
     width: clamp(40rem, 80%, 60rem);
-    padding: 1.25rem;
+    padding: calc(var(--spacing)*5);
 }
 
 .main-single-child {
@@ -165,32 +170,34 @@ html {
 }
 
 .pagination-page {
-    margin: 0.625rem;
+    margin: calc(var(--spacing)*2.5);
 }
 
 .pagination-current {
     color: var(--cyan);
-    margin: 0.625rem;
+    margin: calc(var(--spacing)*2.5);
 }
 
 .icon-small {
-    max-width: 1.25rem;
+    max-width: calc(var(--spacing)*5);
     margin-right: 0.3rem;
     translate: 0 4px;
 }
 
 .bar-right {
-    width: 12.5rem;
-    line-height: 1.5rem;
+    width: clamp(10rem, 80%, 12.5rem);
+    line-height: calc(var(--spacing)*6);
     margin-left: -0.2rem;
-    padding: 0rem 2rem;
+    padding-top: 0;
+    padding-bottom: calc(var(--spacing)*4);
+    padding-inline: calc(var(--spacing)*8);
     border-radius: var(--border-radius);
     height: fit-content;
-    padding-bottom: 1rem;
 
     h3 {
         font-weight: 600;
-        padding: 0 0.25rem;
+        padding-block: 0;
+        padding-inline: calc(var(--spacing));
     }
 }
 
@@ -206,15 +213,23 @@ html {
     text-align: center;
 }
 
+
+.tag-field {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing)*2.4);
+}
+
 /* CLASSES */
 
 .hrugnrs {
-    line-height: 1rem;
-    margin-top: 2rem;
+    line-height: calc(var(--spacing)*4);
+    margin-top: calc(var(--spacing)*8);
 }
 
 .ytueogr {
-    margin-block: 3rem;
+    margin-block: calc(var(--spacing)*12);
 }
 
 .iafrtsf {
@@ -227,7 +242,7 @@ html {
 .btrueir {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: calc(var(--spacing)*6);
 }
 
 .cnrtiep {
@@ -235,8 +250,8 @@ html {
     grid-column-end: 3;
     border: 1px solid;
     border-color: var(--color-border);
-    border-radius: 1rem;
-    padding-bottom: 0.6rem;
+    border-radius: calc(var(--spacing)*4);
+    padding-bottom: calc(var(--spacing)*2.4);
     width: clamp(30rem, 70%, 80rem);
     justify-self: center;
     align-self: center;
@@ -246,29 +261,32 @@ html {
     height: 100%;
     border: 1px solid;
     border-color: var(--color-border);
-    border-radius: 1rem;
-    padding-bottom: 0.6rem;
+    border-radius: calc(var(--spacing)*4);
+    padding-bottom: calc(var(--spacing)*2.4);
     justify-self: center;
     align-self: center;
 }
 
 .aorgnfk {
     list-style: none;
-    padding: 0 0.25rem;
-    font-size: 0.9rem;
+    padding-block: 0;
+    padding-inline: calc(var(--spacing));
+    font-size: calc(var(--spacing)*3.6);
     color: var(--color-fade);
 }
 
 .aokrtwa {
     color: var(--link-blue);
     font-style: italic;
-    margin-top: 2rem;
+    margin-top: calc(var(--spacing)*8);
 }
 
 .diyfsd {
     display: block;
-    margin: 2.5rem auto 0 auto;
-    width: 7.5rem;
+    margin-top: calc(var(--spacing)*10);
+    margin-bottom: 0;
+    margin-inline: auto;
+    width: calc(var(--spacing)*30);
     height: auto;
 }
 
@@ -277,8 +295,8 @@ html {
 }
 
 .sieimee {
-    margin-bottom: 0.5rem;
-    width: 12rem;
+    margin-bottom: calc(var(--spacing)*2);
+    width: calc(var(--spacing)*48);
 }
 
 .easjfre {
@@ -294,7 +312,7 @@ html {
 @media only screen and (max-width: 800px) {
     body {
         overflow-x: scroll;
-        width: unset;
+        /* width: unset; */
         background-color: #0f0f0f;
         background-attachment: fixed;
     }
@@ -309,21 +327,21 @@ html {
     }
 
     nav ul li a {
-        padding: 0 0.25rem;
+        padding-block: 0;
+        padding-inline: calc(var(--spacing));
     }
 
-    .bar-right a {
-        color: #c1cbff;
-    }
 
     .main-container {
-        margin: 4rem 0;
+        margin-block: calc(var(--spacing)*16);
+        padding-right: 0;
     }
 
     .main-pair {
-        margin: 1.25rem 0;
+        margin-block: calc(var(--spacing)*5);
         padding: 0 0 1.25rem 0;
         flex-direction: column;
+        align-items: center;
     }
 
     .main-single-center {
@@ -337,9 +355,12 @@ html {
     }
 
     .bar-right {
-        margin-left: 2rem;
-        font-size: 1.25rem;
-        line-height: 2rem;
+        font-size: calc(var(--spacing)*5);
+        line-height: calc(var(--spacing)*8);
+
+        a {
+            color: #c1cbff;
+        }
     }
 
     .btrueir {

@@ -2,9 +2,9 @@ package views
 
 import (
 	"cmp"
-	"fmt"
 	"codeberg.org/zill_laiss/fest"
 	"codeberg.org/zill_laiss/fest/markdown"
+	"fmt"
 	"slices"
 	"time"
 	"xyago/types"
@@ -166,7 +166,7 @@ templ Blog(
 									</h3>
 									if fm.Tags != nil {
 										{{ slices.Sort(fm.Tags) }}
-										<div>
+										<div class="tag-field">
 											for _, t := range fm.Tags {
 												<span class="tag">
 													<a href={ surl("/tags/%v", t) }>{ t }</a>
@@ -239,7 +239,7 @@ templ Post(post *markdown.MarkdownData) {
 					</div>
 					if fm.Tags != nil {
 						{{ slices.Sort(fm.Tags) }}
-						<div>
+						<div class="tag-field">
 							for _, t := range fm.Tags {
 								<span class="tag"><a href={ surl("/tags/%v", t) }>{ t }</a></span>
 							}
