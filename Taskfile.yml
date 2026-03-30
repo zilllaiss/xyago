@@ -49,7 +49,7 @@ tasks:
   sync:
     if: '"{{.PROD}}" == "true"'
     cmds:
-      - npx prettier --write --ignore-path '' "{{.ROOT_DIR}}/dist/**/**.html"
+      - npx prettier --write --ignore-path '.prettierignore' "{{.ROOT_DIR}}/dist/**/**.html"
       - rsync --archive --delete --exclude=.git -v '{{.ROOT_DIR}}/dist/' '{{.PROD_DEST}}'
 
   new:
