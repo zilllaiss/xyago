@@ -23,12 +23,12 @@ templ Index(blogs, dyn []*markdown.MarkdownData) {
 			<h2 class="ytueogr"><a href="/blog/1">Recent Posts</a></h2>
 			<div class="btrueir">
 				for i, v := range blogs {
-					@homePost(i, v, blogs, false)
+					@homePost(i, v, blogs, false, "/posts/")
 				}
 			</div>
 			<h2 class="ytueogr">Recent updated articles</h2>
 			for i, v := range dyn {
-				@homePost(i, v, dyn, true)
+				@homePost(i, v, dyn, true, "/dynamic/")
 			}
 		</main>
 	}
@@ -367,7 +367,13 @@ templ (gridTable) row() {
 	</div>
 }
 
-templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData, considerUpdateDate bool) {
+templ homePost(
+	i int,
+	v *markdown.MarkdownData,
+	mds []*markdown.MarkdownData,
+	considerUpdateDate bool,
+	urlPrefix string,
+) {
 	{{
 		className := "cnrtiep"
 		style := ""
@@ -382,7 +388,7 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData, co
 		if len(mds) == 2 && i == 1 {
 			style = "grid-column-start: 1; grid-column-end: 3"
 		}
-		url := surl("/posts/%v", v.Slug)
+		url := surl("%v%v", urlPrefix, v.Slug)
 	}}
 	<article class={ className, "bg-gray-l" } style={ style }>
 		<div class="post-header">
