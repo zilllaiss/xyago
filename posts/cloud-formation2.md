@@ -1,5 +1,5 @@
 ---
-title: More awesome clouds in a short time.
+title: More awesome clouds in a short time
 public: true
 published: 2025-09-25
 updated: ''

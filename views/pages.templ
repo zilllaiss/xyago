@@ -26,7 +26,7 @@ templ Index(blogs, dyn []*markdown.MarkdownData) {
 					@homePost(i, v, blogs, false, "/posts/")
 				}
 			</div>
-			<h2 class="ytueogr">Recent updated articles</h2>
+			<h2 class="ytueogr">Recently updated articles</h2>
 			for i, v := range dyn {
 				@homePost(i, v, dyn, true, "/dynamic/")
 			}

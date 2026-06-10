@@ -1,5 +1,5 @@
 ---
-title: Useful softwares.
+title: Useful softwares
 public: true
 published: 2026-06-10
 updated: ''
