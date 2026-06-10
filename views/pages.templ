@@ -10,10 +10,10 @@ import (
 	"xyago/types"
 )
 
-templ Index(mds []*markdown.MarkdownData) {
+templ Index(blogs, dyn []*markdown.MarkdownData) {
 	{{
-		if len(mds) > 3 {
-			mds = mds[:3]
+		if len(blogs) > 3 {
+			blogs = blogs[:3]
 		}
 	}}
 	@Base() {
@@ -22,10 +22,14 @@ templ Index(mds []*markdown.MarkdownData) {
 		<main class="main-single-center">
 			<h2 class="ytueogr"><a href="/blog/1">Recent Posts</a></h2>
 			<div class="btrueir">
-				for i, v := range mds {
-					@homePost(i, v, mds)
+				for i, v := range blogs {
+					@homePost(i, v, blogs, false)
 				}
 			</div>
+			<h2 class="ytueogr">Recent updated articles</h2>
+			for i, v := range dyn {
+				@homePost(i, v, dyn, true)
+			}
 		</main>
 	}
 }
@@ -277,27 +281,51 @@ templ Post(post *markdown.MarkdownData) {
                     margin-left: 0;
             }
         </style>
-		<script defer src="/assets/js/lib/alpine.js"></script>
+	}
+}
+
+templ Dynamic(posts []*markdown.MarkdownData) {
+	{{ gt := gridTable{} }}
+	@SingleNoH2() {
+		<article class="main-container fl-center">
+			<h2>Dynamic articles</h2>
+			<p>A list of articles which I keep updating as time goes on.</p>
+			for _, post := range posts {
+				{{
+					var fm types.Frontmatter
+					if err := post.GetFrontmatter(&fm); err != nil {
+						return err
+					}
+				}}
+				@gt.parent() {
+					@gt.row() {
+						<div><a href={ "/dynamic/" + post.Slug }>{ fm.Title }</a></div>
+						<div>{ fm.Preamble }</div>
+					}
+				}
+			}
+		</article>
 	}
 }
 
 templ Projects() {
+	{{ gt := gridTable{} }}
 	@SingleNoH2() {
 		<article class="main-container">
 			<h2>Projects</h2>
-			<div class="p-bcbryer">
-				@project("Sites") {
+			@gt.parent() {
+				@gt.section("Sites") {
 					<div>My personal site</div>
 					<div>The site you are on right now. Can contain anything, to be honest.</div>
 					<div><a href="https://filafaq.net/">Filafaq</a></div>
 					<div>Database regarding Islam from all the horizons.</div>
 				}
-				@project("Utilities") {
+				@gt.section("Utilities") {
 					<div><a href="https://codeberg.org/zill_laiss/fest">FEST</a></div>
 					<div>
 						Short for "Fantastically Easy Static-site with Templ".
-                        As the name suggest, it's for generating static-site using 
-                        Templ (Go templating library).
+						As the name suggest, it's for generating static-site using 
+						Templ (Go templating library).
 						This is what this site is generated with.
 					</div>
 					<div>
@@ -307,25 +335,39 @@ templ Projects() {
 					</div>
 					<div>Converts dictionary-like markdown files to PDF.</div>
 				}
-				@project("UI demos") {
+				@gt.section("UI demos") {
 					<div><a href="/tut">TemplUI demo</a></div>
 					<div>Using <a href="https://templui.io/">Templui</a> library with Go.</div>
 				}
-			</div>
+			}
 		</article>
 	}
 }
 
-templ project(title string) {
+type gridTable struct{}
+
+templ (gridTable) parent() {
+	<div class="grid-table">
+		{ children... }
+	</div>
+}
+
+templ (gt gridTable) section(title string) {
 	<section>
 		<h3>{ title }</h3>
-		<div class="p-grid-table-pair">
+		@gt.row() {
 			{ children... }
-		</div>
+		}
 	</section>
 }
 
-templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
+templ (gridTable) row() {
+	<div class="grid-table-pair">
+		{ children... }
+	</div>
+}
+
+templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData, considerUpdateDate bool) {
 	{{
 		className := "cnrtiep"
 		style := ""
@@ -347,7 +389,11 @@ templ homePost(i int, v *markdown.MarkdownData, mds []*markdown.MarkdownData) {
 			<h3 class="post-title"><a href={ url }>{ fm.Title, err }</a></h3>
 			<div class="post-date">
 				Written by { fm.Author }
-				<span>on { fm.PublishedAt }</span>
+				if considerUpdateDate &&len(fm.UpdatedAt) >  0 {
+					<span>- Updated on { fm.UpdatedAt }</span>
+				} else {
+					<span>on { fm.PublishedAt }</span>
+				}
 			</div>
 			if len(fm.Tags) > 0 {
 				{{ slices.Sort(fm.Tags) }}

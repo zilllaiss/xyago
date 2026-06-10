@@ -5,16 +5,34 @@ import (
 	"fmt"
 	"slices"
 	"time"
+
 	"xyago/types"
 
 	"codeberg.org/zill_laiss/fest/markdown"
+	figure "github.com/mangoumbrella/goldmark-figure"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 var (
-	tagsMap    = map[string][]*markdown.MarkdownData{}
-	tagsSorted = []string{}
-	posts      []*markdown.MarkdownData
+	tagsMap      = map[string][]*markdown.MarkdownData{}
+	tagsSorted   = []string{}
+	posts        []*markdown.MarkdownData
+	dynamicPosts []*markdown.MarkdownData
 )
+
+func mainMdParser() *WrappedMarkdownParser {
+	m := markdown.NewMarkdown(
+		goldmark.WithRendererOptions(html.WithUnsafe()),
+		goldmark.WithExtensions(
+			figure.Figure,
+			extension.Table,
+			extension.DefinitionList,
+		),
+	)
+	return &WrappedMarkdownParser{mp: m}
+}
 
 type WrappedMarkdownParser struct {
 	mp markdown.MarkdownParser
@@ -58,16 +76,10 @@ func (wmp *WrappedMarkdownParser) ParseFiles(path string) ([]*markdown.MarkdownD
 	}); err != nil {
 		return nil, fmt.Errorf("error scanning markdown, %w", err)
 	}
-
-	for k := range tagsMap {
-		tagsSorted = append(tagsSorted, k)
-	}
-
-	slices.Sort(tagsSorted)
 	return m, nil
 }
 
-func sortMarkdownFiles(md []*markdown.MarkdownData) error {
+func sortMarkdownFilesByDate(md []*markdown.MarkdownData, considerUpdatedDate bool) error {
 	var sortErr error
 	slices.SortStableFunc(md, func(a, b *markdown.MarkdownData) int {
 		aFm := &types.Frontmatter{}
@@ -81,15 +93,39 @@ func sortMarkdownFiles(md []*markdown.MarkdownData) error {
 			return 0
 		}
 
-		t1, err1 := time.Parse(time.DateOnly, aFm.PublishedAt)
-		t2, err2 := time.Parse(time.DateOnly, bFm.PublishedAt)
+		var parseError error
 
-		if err := cmp.Or(err1, err2); err != nil {
-			sortErr = err
+		updatedOrPublished := func(fm *types.Frontmatter) *time.Time {
+			if parseError != nil {
+				return nil
+			}
+
+			var t time.Time
+			var err error
+
+			if considerUpdatedDate {
+				t, err = time.Parse(time.DateOnly, fm.UpdatedAt)
+				if err == nil {
+					return &t
+				}
+			}
+
+			t, err = time.Parse(time.DateOnly, fm.PublishedAt)
+			if err == nil {
+				return &t
+			}
+			parseError = err
+			return nil
+		}
+
+		t1 := updatedOrPublished(aFm)
+		t2 := updatedOrPublished(bFm)
+		if parseError != nil {
+			sortErr = parseError
 			return 0
 		}
 
-		return int(t1.Sub(t2)) * -1
+		return int((*t1).Sub(*t2)) * -1
 	})
 	return sortErr
 }

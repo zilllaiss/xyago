@@ -36,7 +36,9 @@ func generator() *fest.Generator {
 		AppendToHead(temfest.ImportStyle(postStyling))
 
 	g.AddRoute("/404.html", views.NotFound()).SetTitle("Not found")
-	g.AddRoute("/projects", views.Projects()). 
+	g.AddRoute("/dynamic", views.Dynamic(dynamicPosts)).SetTitle("Dynamic articles" + suffix)
+
+	g.AddRoute("/projects", views.Projects()).
 		SetTitle("Projects" + suffix).
 		AppendToHead(temfest.ImportStyle("/assets/styles/projects.css"))
 
@@ -50,9 +52,15 @@ func generator() *fest.Generator {
 		AppendToHead(temfest.ImportStyle(postStyling)).
 		AddToGenerator(g, tagsFn)
 
-	fest.NewRoutesT("/posts/{s}", posts).
-		AppendToHead(temfest.ImportStyle(postStyling)).
-		AddToGenerator(g, postsFn(suffix))
+	postRoutes := []*fest.Routes[*markdown.MarkdownData]{
+		fest.NewRoutesT("/posts/{s}", posts),
+		fest.NewRoutesT("/dynamic/{s}", dynamicPosts),
+	}
+
+	for _, routes := range postRoutes {
+		routes.AppendToHead(temfest.ImportStyle(postStyling)).
+			AddToGenerator(g, postsFn(suffix))
+	}
 
 	fest.NewPaginatedRoutes("/blog/{s}", posts, 5).
 		SetTitle("Blogs - page {s}"+suffix).
@@ -62,7 +70,7 @@ func generator() *fest.Generator {
 	return g
 }
 
-func index(ctx context.Context) (templ.Component, error) { return views.Index(posts), nil }
+func index(ctx context.Context) (templ.Component, error) { return views.Index(posts, dynamicPosts), nil }
 
 func blogs(ctx context.Context,
 	rp *fest.RouteParam[*fest.Pagination[*markdown.MarkdownData]],

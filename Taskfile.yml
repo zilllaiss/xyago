@@ -2,7 +2,7 @@ version: "3"
 
 vars:
   JSLIB_PATH: assets/js/lib
-  TEMPL_VER: "v0.3.1001"
+  TEMPL_VER: "v0.3.1020"
   ALPINEJS_VER: "3.13.7"
 
   PROD_DEST: "{{.ROOT_DIR}}/../zilllaiss.github.io"
@@ -109,6 +109,7 @@ tasks:
         task init BIN_DIR='{{.ROOT_DIR}}/bin'
 
   dev:
+    desc: launch the project in dev mode
     cmds:
       - |
         air &
@@ -133,10 +134,7 @@ tasks:
         cd ../zilllaiss.github.io/ &&
         git {{.CLI_ARGS}}
 
-  ##### INTERNAL ######
-
   deps:alpinejs:
-    internal: true
     status:
       - test -f {{.JSLIB_PATH}}/alpine.js
       - "[[ $(cat .task/alpinejs_ver) == {{.ALPINEJS_VER}} ]]"
@@ -147,7 +145,6 @@ tasks:
       - "echo {{.ALPINEJS_VER}} > .task/alpinejs_ver"
 
   deps:templ:
-    internal: true
     status:
       - test -f ./bin/templ && [[ $(./bin/templ version) == {{.TEMPL_VER}} ]]
     cmds:

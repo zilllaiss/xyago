@@ -8,6 +8,7 @@ import (
 templ Base() {
 	{{ year := time.Now().Year() }}
 	{ children... }
+	<script defer src="/assets/js/lib/alpine.js"></script>
 	<footer>
 		© { year } Zill_Laiss.
 	</footer>
@@ -15,12 +16,50 @@ templ Base() {
 
 templ Nav() {
 	<nav class="afirnyt">
-		<ul>
-			<li><a href="/">Home</a></li>
-			<li><a href="/blog/1">Blog</a></li>
-            <li><a href="/projects">Projects</a></li>
-			<li><a href="/tags/">Tags</a></li>
-			<li><a href="/about">About</a></li>
+		<ul class="bfergrt">
+			<li class="iokfrse"><a href="/">Home</a></li>
+			<li
+				class="nburgier"
+				id="dd-explore"
+				x-data="{ ddExploreShow: false, ddExploreClicked: false }"
+				x-bind:class="ddExploreShow ? 'iefmriwi' : '' "
+				x-on:mouseenter="if (!ddExploreClicked) ddExploreShow = true"
+				x-on:mouseleave="if (!ddExploreClicked) ddExploreShow = false"
+				x-on:click="
+                    if (!ddExploreClicked) 
+                        ddExploreShow = ddExploreClicked = true
+                    else
+                        ddExploreShow = ddExploreClicked = !ddExploreShow
+                "
+				x-on:click.outside="ddExploreShow = ddExploreClicked = false"
+			>
+				<a
+					href="#dd-explore"
+				>
+					Explore
+				</a>
+				<ul
+					class="sfn4unse"
+					x-show="ddExploreShow"
+					x-bind:class="ddExploreShow ? 'iefmriwi' : '' "
+				>
+					<li class="tgrirsrr">
+						<a href="/blog/1">
+							<div>Blog</div>
+							<div class="fiejgrse">Latest articles sorted chronologically</div>
+						</a>
+					</li>
+					<li class="tgrirsrr">
+						<a href="/dynamic">
+							<div>Dynamic articles</div>
+							<div class="fiejgrse">List of constantly updated articles</div>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="iokfrse"><a href="/projects">Projects</a></li>
+			<li class="iokfrse"><a href="/tags/">Tags</a></li>
+			<li class="iokfrse"><a href="/about">About</a></li>
 		</ul>
 	</nav>
 }

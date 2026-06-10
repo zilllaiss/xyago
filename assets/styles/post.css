@@ -197,6 +197,10 @@
 
     a {
         color: var(--color-fade);
+
+        &:hover {
+            color: var(--link-blue);
+        }
     }
 
     h2 {

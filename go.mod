@@ -15,6 +15,6 @@ require (
 
 require (
 	codeberg.org/zill_laiss/fest v0.10.0
-	github.com/a-h/templ v0.3.1001
+	github.com/a-h/templ v0.3.1020
 	github.com/mangoumbrella/goldmark-figure v1.4.0
 )

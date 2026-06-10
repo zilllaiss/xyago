@@ -3,7 +3,7 @@
 :root {
     --spacing: 0.25rem;
 
-    --txwhite: #e7e7e7;
+    --txwhite: #e3e3e3;
     --txgray: #7c7c7c;
     --bgbottomblack: #0f0f15;
     --bgupperblack: #151515;
@@ -14,6 +14,7 @@
     --title-blue: #6a81ff;
     --link-blue: #9eadff;
     --cyan: #00ffe7;
+    --color-bg: #0f0f0f;
     --color-border: #2d2828;
     --color-fade: hsl(0, 0%, 83.1%);
     --color-blue-fade: #252550;
@@ -80,7 +81,7 @@ nav {
         flex-direction: unset;
         list-style-type: none;
         padding: 0;
-        overflow: hidden;
+        /* overflow: hidden; */
 
         li {
             a {
@@ -128,10 +129,32 @@ html {
     background: #555;
 }
 
+td {
+    padding-block: calc(var(--spacing)*1);
+    padding-right: calc(var(--spacing)*16);
+    vertical-align: top;
+}
+
+dt {
+    float: left;
+    width: clamp(4rem, 100%, 9rem);
+}
+
+dd {
+    margin-left: calc(var(--spacing)*40);
+    margin-block: calc(var(--spacing)*2);
+}
+
 /* REUSABLES */
 
 .bg-gray-l {
     background-color: var(--color-gray-light);
+}
+
+
+.fl-center {
+    justify-content: center;
+    align-items: center;
 }
 
 .main-container {
@@ -222,24 +245,44 @@ html {
     gap: calc(var(--spacing)*2.4);
 }
 
+
+.grid-table {
+    display: flex;
+    width: auto;
+    max-width: 80%;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    a {
+        color: var(--link-blue);
+    }
+}
+
+.grid-table-pair {
+    grid-template-columns: clamp(4rem, 30%, 10rem) 1fr;
+    display: grid;
+    gap: 0.5rem 1rem;
+}
+
 /* CLASSES */
 
 .afirnyt {
     height: calc(var(--spacing)*12);
 
-    ul {
-        display: flex;
-        height: 100%;
-    }
+}
 
-    li {
-        height: 100%;
-        display: flex;
-        align-items: center;
+.bfergrt {
+    display: flex;
+    height: 100%;
+}
 
-        &:hover {
-            background-color: var(--color-blue-fade);
-        }
+.iokfrse {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background-color: var(--color-blue-fade);
     }
 }
 
@@ -329,6 +372,35 @@ html {
     }
 }
 
+.nburgier {
+    position: relative;
+}
+
+.sfn4unse {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    background-color: var(--color-bg);
+    translate: calc(var(--spacing)*12*-1);
+}
+
+.iefmriwi {
+    background-color: hsl(0, 0%, 11.8%);
+}
+
+.tgrirsrr {
+    width: calc(var(--spacing)*80);
+
+    a {
+        text-align: left !important;
+    }
+}
+
+.fiejgrse {
+    font-size: calc(var(--spacing)*3.6);
+    color: #afafaf;
+}
+
 @media only screen and (max-width: 800px) {
     body {
         overflow-x: scroll;
@@ -381,6 +453,10 @@ html {
         a {
             color: #c1cbff;
         }
+    }
+
+    .grid-table {
+        max-width: unset;
     }
 
     .btrueir {

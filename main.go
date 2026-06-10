@@ -1,34 +1,37 @@
 package main
 
 import (
+	"cmp"
 	"log"
-
-	figure "github.com/mangoumbrella/goldmark-figure"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/renderer/html"
-	"codeberg.org/zill_laiss/fest/markdown"
+	"slices"
 )
 
 func main() {
 	var err error
 
-	m := markdown.NewMarkdown(
-		goldmark.WithRendererOptions(html.WithUnsafe()),
-		goldmark.WithExtensions(figure.Figure),
-	)
-	wmp := &WrappedMarkdownParser{mp: m}
+	wmp := mainMdParser()
 
-	posts, err = wmp.ParseFiles("posts")
-	if err != nil {
+	var err1, err2 error
+
+	posts, err1 = wmp.ParseFiles("posts")
+	dynamicPosts, err2 = wmp.ParseFiles("posts/dynamic")
+
+	if err = cmp.Or(err1, err2); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err := sortMarkdownFiles(posts); err != nil {
+	for k := range tagsMap {
+		tagsSorted = append(tagsSorted, k)
+	}
+	slices.Sort(tagsSorted)
+
+	err1 = sortMarkdownFilesByDate(posts, false)
+	err2 = sortMarkdownFilesByDate(dynamicPosts, true)
+	if err := cmp.Or(err1, err2); err != nil {
 		log.Fatalln(err)
 	}
 
 	g := generator()
-	
 
 	if err := g.Generate(); err != nil {
 		log.Fatalln(err)
